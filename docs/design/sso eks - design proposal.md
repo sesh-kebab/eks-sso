@@ -2,7 +2,7 @@
 
 This is a design proposal to enable SSO auth via an identity provider like Auth0, into a Kubernetes cluster in AWS EKS.
 
-AWS EKS uses IAM to provide authentication to your Kubernetes cluster with RBAC enabled for authorization. The RBAC mechanisms is native to Kubernetes and uses native primitives like `roles` and `role bindings` to configure authorization for a give user and or group.
+AWS EKS uses IAM to provide authentication to your Kubernetes cluster with RBAC enabled for authorization. The RBAC mechanisms is native to Kubernetes and uses native primitives like `roles` and `role bindings` to configure authorization for a given user and or group.
 
 
 
