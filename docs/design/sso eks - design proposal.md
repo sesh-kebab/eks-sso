@@ -33,7 +33,7 @@ Any command run via kubectl will then execte the Heptio CLI to get a token which
 
 **Potential Auth Flow for SSO integration**
 
-To enable SSO via an IdP, we could provide an authetnicating proxy that is a service we bootstrap at EKS cluster creation time. The authenticating service's role is to:
+To enable SSO via an IdP, we could provide an authenticating proxy that is a service we bootstrap at EKS cluster creation time. The authenticating service's role is to:
 
 * Redirect user to IdP or authenticate user by sending LDAP credentials to IdP
 * Once a user is authenticated, present a token to the user and kubeconfig that they can use to configure their machine to connect to the cluster.
@@ -95,7 +95,7 @@ Unfortunately, authenticating with EKS requires generating tokens via locally in
 
 Although we could bypass a user having the heptio authenticator installed locally, and have our service generate tokens, our service would become a bottle neck. If our service goes down, so will users' ability to connect to a kubernetes cluster. 
 
-So using the SSO endpoint to provide initial bootstrapping of default roles for a cluster and continuing to rely on a user having the heptio authenticator installed locally and their aws profiles correctly configured would be safer approach.
+So using the SSO endpoint to provide initial bootstrapping of default roles for a cluster and continuing to rely on a user having the heptio authenticator installed locally (with their aws profiles correctly configured) would be safer approach.
 
 
 
