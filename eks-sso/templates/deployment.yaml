@@ -62,7 +62,7 @@ spec:
         - name: EKS_SSO_DEBUG
           value: "{{ .Values.sso.debug }}"
         - name: EKS_SSO_IN_CLUSTER
-          value: "true"
+          value: "{{ .Values.sso.in_cluster }}"
         - name: EKS_SSO_PORT
           value: "{{ .Values.sso.port }}"
       serviceAccountName: eks-sso
