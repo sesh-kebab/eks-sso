@@ -1,0 +1,85 @@
+# ------------------- Dashboard Service Account ------------------- #
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: eks-sso
+  name: eks-sso
+  namespace: kube-system
+
+---
+# ------------------- Dashboard Role & Role Binding ------------------- #
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: eks-sso-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: eks-sso
+  namespace: kube-system
+
+---
+# ------------------- EKS-SSO Deployment ------------------- #
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: eks-sso
+  name: eks-sso
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eks-sso
+  template:
+    metadata:
+      labels:
+        app: eks-sso
+    spec:
+      containers:
+      - name: eks-sso
+        image:  "{{ .Values.image.repository }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.sso.port }}
+        env:
+        - name: EKS_SSO_CLUSTER_REGION
+          value: "{{ .Values.aws.region }}"
+        - name: EKS_SSO_CLUSTER_NAME
+          value: "{{ .Values.sso.name }}"
+        - name: EKS_SSO_AUTH0_CONNECTION
+          value: "{{ .Values.auth0.connection }}"
+        - name: EKS_SSO_AUTH0_CLIENT_ID
+          value: "{{ Values.auth0.client_id }}"
+        - name: EKS_SSO_DEBUG
+          value: "{{ .Values.sso.debug }}"
+        - name: EKS_SSO_IN_CLUSTER
+          value: "true"
+        - name: EKS_SSO_PORT
+          value: "{{ .Values.sso.port }}"
+      serviceAccountName: eks-sso
+---
+
+# ------------------- EKS-SSO Service ------------------- #
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: eks-sso
+  name: eks-sso
+  namespace: kube-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: {{ .Values.sso.port }}
+  selector:
+    k8s-app: eks-sso

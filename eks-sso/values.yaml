@@ -1,0 +1,20 @@
+# Default values for fluentd-cloudwatch.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: quintilesims/eks-sso
+  tag: latest
+  pullPolicy: Always
+
+sso:
+  debug: true
+  port: 8080
+  name:
+
+auth0: 
+  connection:
+  client_id:
+
+aws: 
+  region: us-west-2
+
