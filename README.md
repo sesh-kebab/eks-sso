@@ -6,7 +6,7 @@ A service to add SSO to EKS cluster.
 
 Have helm tiller installed and then run helm command with desired values
 
-`helm install eks-sso/ --name eks-sso`
+`helm install eks-sso/ --set sso.name="{name}" --set auth0.connection="{connection}" --set auth0.client_id="{id}" --name eks-sso`
 
 ## Update Helm Chart
 
