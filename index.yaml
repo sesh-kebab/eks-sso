@@ -3,11 +3,11 @@ entries:
   eks-sso:
   - apiVersion: v0.0.1
     appVersion: 0.0.1
-    created: 2018-07-13T14:00:43.054139402-07:00
+    created: 2018-07-13T14:45:17.202996362-07:00
     description: Add SSO to EKS Cluster
-    digest: d9f4075d9710c105e70e5de0d8f362d97d70141db573b9f42b82a14f6875f9b1
+    digest: 2a65cb655a207365fda2bd28614ee0f66366dd8ce3bf5543196bb4f52b294c11
     name: eks-sso
     urls:
     - eks-sso-0.0.1.tgz
     version: 0.0.1
-generated: 2018-07-13T14:00:43.053631121-07:00
+generated: 2018-07-13T14:45:17.201385352-07:00
