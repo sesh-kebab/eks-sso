@@ -1,0 +1,5 @@
+apiVersion: v0.0.1
+appVersion: "0.0.1"
+description: Add SSO to EKS Cluster
+name: eks-sso
+version: 0.0.1

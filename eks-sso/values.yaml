@@ -1,0 +1,19 @@
+# Default values for eks-sso.
+image:
+  repository: quintilesims/eks-sso
+  tag: latest
+  pullPolicy: Always
+
+sso:
+  debug: true
+  port: 8080
+  name:
+  in_cluster: true
+
+auth0: 
+  connection:
+  client_id:
+
+aws: 
+  region: us-west-2
+
