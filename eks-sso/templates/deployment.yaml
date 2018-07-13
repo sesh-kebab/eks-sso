@@ -82,4 +82,4 @@ spec:
     - port: 80
       targetPort: {{ .Values.sso.port }}
   selector:
-    k8s-app: eks-sso
+    app: eks-sso
