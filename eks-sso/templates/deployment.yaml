@@ -73,7 +73,7 @@ kind: Service
 apiVersion: v1
 metadata:
   labels:
-    k8s-app: eks-sso
+    app: eks-sso
   name: eks-sso
   namespace: kube-system
 spec:
