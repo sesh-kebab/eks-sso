@@ -1,6 +1,4 @@
-# Default values for fluentd-cloudwatch.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Default values for eks-sso.
 image:
   repository: quintilesims/eks-sso
   tag: latest

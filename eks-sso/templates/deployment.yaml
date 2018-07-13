@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
       - name: eks-sso
-        image:  "{{ .Values.image.repository }}"
+        image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.sso.port }}
