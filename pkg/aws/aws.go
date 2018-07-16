@@ -94,6 +94,11 @@ func (c ClientAPI) AddIAMCredentials(accessID, secretKey string) (*models.AddCre
 func (c ClientAPI) GetClusterInfo(accessID, secretKey string) (*models.ClusterInfoResponse, error) {
 	svc := c.eks(accessID, secretKey)
 
+	iamUser, err := c.AddIAMCredentials(accessID, secretKey)
+	if err != nil {
+		return nil, err
+	}
+
 	input := &eks.DescribeClusterInput{}
 	input.SetName(c.clusterName)
 	output, err := svc.DescribeCluster(input)
@@ -107,9 +112,10 @@ func (c ClientAPI) GetClusterInfo(accessID, secretKey string) (*models.ClusterIn
 	}
 
 	vals := map[string]string{
-		"Endpoint": aws.StringValue(output.Cluster.Endpoint),
-		"CertData": aws.StringValue(output.Cluster.CertificateAuthority.Data),
-		"Name":     aws.StringValue(output.Cluster.Name),
+		"Endpoint":    aws.StringValue(output.Cluster.Endpoint),
+		"CertData":    aws.StringValue(output.Cluster.CertificateAuthority.Data),
+		"Name":        aws.StringValue(output.Cluster.Name),
+		"IamUserName": iamUser.Username,
 	}
 	buf := new(bytes.Buffer)
 	if err := tmpl.Execute(buf, vals); err != nil {
@@ -138,7 +144,7 @@ current-context: eks
 contexts:
 - context:
     cluster: eks-{{.Name}}
-    namespace: {{.Name}}
+    namespace: {{.IamUserName}}
     user: iam-user
   name: eks
 
