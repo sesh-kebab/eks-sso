@@ -21,13 +21,14 @@ import (
 )
 
 const (
-	Auth0Domain         = "https://imshealth.auth0.com"
 	FlagPort            = "port"
 	EVPort              = "EKS_SSO_PORT"
 	FlagDebug           = "debug"
 	EVDebug             = "EKS_SSO_DEBUG"
 	FlagAWSRegion       = "aws-region"
 	EVAWSRegion         = "EKS_SSO_AWS_REGION"
+	FlagAuth0Domain     = "auth0-domain"
+	EVAuth0Domain       = "EKS_SSO_AUTH0_DOMAIN"
 	FlagAuth0ClientID   = "auth0-client-id"
 	EVAuth0ClientID     = "EKS_SSO_AUTH0_CLIENT_ID"
 	FlagAuth0Connection = "auth0-connection"
@@ -38,7 +39,7 @@ const (
 	EVEncryptionKey     = "EKS_SSO_ENCRYPTION_KEY"
 	FlagInCluster       = "in-cluster"
 	EVInCluster         = "EKS_SSO_IN_CLUSTER"
-	FlagKubeConfigPath  = "kubeconfig-path"
+	FlagKubeConfigPath  = "kube-config-path"
 	EVKubeConfigPath    = "EKS_SSO_KUBE_CONFIG_PATH"
 )
 
@@ -60,6 +61,11 @@ func main() {
 			Name:   FlagAWSRegion,
 			EnvVar: EVAWSRegion,
 			Value:  "us-west-2",
+		},
+		cli.StringFlag{
+			Name:   FlagAuth0Domain,
+			EnvVar: EVAuth0Domain,
+			Value:  "https://imshealth.auth0.com",
 		},
 		cli.StringFlag{
 			Name:   FlagAuth0ClientID,
@@ -114,11 +120,11 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
-		// router & session store
+		// router & cookie store
 		router := mux.NewRouter()
 
 		key := []byte(c.String(FlagEncryptionKey))
-		store := sessions.NewCookieStore(key)
+		cookieStore := sessions.NewCookieStore(key)
 
 		// create controller dependencies
 		k8sClient, err := kubernetes.NewKubernetesClient(
@@ -131,7 +137,7 @@ func main() {
 		}
 
 		auth0Authenticator := auth.NewAuth0Authenticator(
-			Auth0Domain,
+			c.String(FlagAuth0Domain),
 			c.String(FlagAuth0Connection),
 			c.String(FlagAuth0ClientID),
 			c.String(FlagClusterName),
@@ -146,8 +152,8 @@ func main() {
 		cs := []interface {
 			GetRoutes() []controllers.Route
 		}{
-			controllers.NewAuthController(auth0Authenticator, store),
-			controllers.NewAWSController(awsClient, k8sClient, store),
+			controllers.NewAuthController(auth0Authenticator, cookieStore),
+			controllers.NewAWSController(awsClient, k8sClient, cookieStore),
 		}
 
 		// register routes for all the controllers
@@ -174,8 +180,8 @@ func main() {
 
 		// add middleware
 		router.Use(controllers.NewLoggingMiddleware())
-		router.Use(controllers.NewAuthenticationMiddleware(isRestricted, store))
-		router.Use(controllers.NewCredentialsMiddleware(isRestricted, store))
+		router.Use(controllers.NewAuthenticationMiddleware(isRestricted, cookieStore))
+		router.Use(controllers.NewCredentialsMiddleware(isRestricted, cookieStore))
 
 		// create server and start listening
 		srv := &http.Server{
