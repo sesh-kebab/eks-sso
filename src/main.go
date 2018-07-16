@@ -12,27 +12,103 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	multierror "github.com/hashicorp/go-multierror"
 	"github.com/quintilesims/eks-sso/pkg/auth"
 	"github.com/quintilesims/eks-sso/pkg/aws"
-	"github.com/quintilesims/eks-sso/pkg/config"
 	"github.com/quintilesims/eks-sso/pkg/controllers"
 	"github.com/quintilesims/eks-sso/pkg/kubernetes"
 	"github.com/quintilesims/eks-sso/pkg/logging"
 	"github.com/urfave/cli"
 )
 
+const (
+	Auth0Domain         = "https://imshealth.auth0.com"
+	FlagPort            = "port"
+	EVPort              = "EKS_SSO_PORT"
+	FlagDebug           = "debug"
+	EVDebug             = "EKS_SSO_DEBUG"
+	FlagAWSRegion       = "aws-region"
+	EVAWSRegion         = "EKS_SSO_AWS_REGION"
+	FlagAuth0ClientID   = "auth0-client-id"
+	EVAuth0ClientID     = "EKS_SSO_AUTH0_CLIENT_ID"
+	FlagAuth0Connection = "auth0-connection"
+	EVAuth0Connection   = "EKS_SSO_AUTH0_CONNECTION"
+	FlagClusterName     = "cluster-name"
+	EVClusterName       = "EKS_SSO_CLUSTER_NAME"
+	FlagEncryptionKey   = "encryption-key"
+	EVEncryptionKey     = "EKS_SSO_ENCRYPTION_KEY"
+	FlagInCluster       = "in-cluster"
+	EVInCluster         = "EKS_SSO_IN_CLUSTER"
+	FlagKubeConfigPath  = "kubeconfig-path"
+	EVKubeConfigPath    = "EKS_SSO_KUBE_CONFIG_PATH"
+)
+
 func main() {
 	app := cli.NewApp()
-	initFlags(app)
+	app.Name = "eks-sso"
+	app.Usage = "single sign solution for aws eks"
+	app.Flags = []cli.Flag{
+		cli.IntFlag{
+			Name:   FlagPort,
+			EnvVar: EVPort,
+			Value:  8080,
+		},
+		cli.BoolFlag{
+			Name:   FlagDebug,
+			EnvVar: EVDebug,
+		},
+		cli.StringFlag{
+			Name:   FlagAWSRegion,
+			EnvVar: EVAWSRegion,
+			Value:  "us-west-2",
+		},
+		cli.StringFlag{
+			Name:   FlagAuth0ClientID,
+			EnvVar: EVAuth0ClientID,
+		},
+		cli.StringFlag{
+			Name:   FlagAuth0Connection,
+			EnvVar: EVAuth0Connection,
+		},
+		cli.StringFlag{
+			Name:   FlagClusterName,
+			EnvVar: EVClusterName,
+		},
+		cli.StringFlag{
+			Name:   FlagEncryptionKey,
+			EnvVar: EVEncryptionKey,
+		},
+		cli.BoolFlag{
+			Name:   FlagInCluster,
+			EnvVar: EVInCluster,
+		},
+		cli.StringFlag{
+			Name:   FlagKubeConfigPath,
+			EnvVar: EVKubeConfigPath,
+		},
+	}
 
 	app.Before = func(c *cli.Context) error {
-		if err := validateConfig(c); err != nil {
-			return err
+		requiredFlags := []string{
+			FlagAuth0ClientID,
+			FlagAuth0Connection,
+			FlagClusterName,
+			FlagEncryptionKey,
+			FlagKubeConfigPath,
+		}
+
+		for _, flag := range requiredFlags {
+			if !c.IsSet(flag) {
+				return fmt.Errorf("Required flag '%s' is not set!", flag)
+			}
+		}
+
+		path := c.String(FlagKubeConfigPath)
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			return fmt.Errorf("Invalid kubeconfig path; file '%s' does not exist", path)
 		}
 
 		log.SetFlags(log.LstdFlags | log.Lshortfile)
-		log.SetOutput(logging.NewLogWriter(c.Bool("debug")))
+		log.SetOutput(logging.NewLogWriter(c.Bool(FlagDebug)))
 
 		return nil
 	}
@@ -40,36 +116,38 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		// router & session store
 		router := mux.NewRouter()
-		sessionStore := sessions.NewCookieStore([]byte(c.String(config.FlagClusterName)))
+
+		key := []byte(c.String(FlagEncryptionKey))
+		store := sessions.NewCookieStore(key)
 
 		// create controller dependencies
 		k8sClient, err := kubernetes.NewKubernetesClient(
-			c.Bool(config.FlagInCluster),
-			c.String(config.FlagKubeConfigPath),
+			c.Bool(FlagInCluster),
+			c.String(FlagKubeConfigPath),
 			nil,
 		)
 		if err != nil {
 			return err
 		}
 
-		auth0 := auth.NewAuth0Authenticator(
-			c.String(config.FlagAuth0Domain),
-			c.String(config.FlagAuth0Connection),
-			c.String(config.FlagAuth0ClientID),
-			c.String(config.FlagClusterName),
-			newHTTPClient(),
+		auth0Authenticator := auth.NewAuth0Authenticator(
+			Auth0Domain,
+			c.String(FlagAuth0Connection),
+			c.String(FlagAuth0ClientID),
+			c.String(FlagClusterName),
+			newHttpClient(),
 		)
 		awsClient := aws.NewClient(
-			c.String(config.FlagClusterName),
-			c.String(config.FlagAWSRegion),
+			c.String(FlagClusterName),
+			c.String(FlagAWSRegion),
 		)
 
 		// create controllers
 		cs := []interface {
 			GetRoutes() []controllers.Route
 		}{
-			controllers.NewAuthController(auth0, sessionStore),
-			controllers.NewAWSController(awsClient, k8sClient, sessionStore),
+			controllers.NewAuthController(auth0Authenticator, store),
+			controllers.NewAWSController(awsClient, k8sClient, store),
 		}
 
 		// register routes for all the controllers
@@ -90,19 +168,19 @@ func main() {
 			return restricted
 		}
 
-		// add middleware
-		router.Use(controllers.NewLoggingMiddleware())
-		router.Use(controllers.NewAuthenticationMiddleware(isRestricted, sessionStore))
-		router.Use(controllers.NewCredentialsMiddleware(isRestricted, sessionStore))
-
 		// register file server at root
 		fs := http.FileServer(http.Dir("./ui/build"))
 		router.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
+		// add middleware
+		router.Use(controllers.NewLoggingMiddleware())
+		router.Use(controllers.NewAuthenticationMiddleware(isRestricted, store))
+		router.Use(controllers.NewCredentialsMiddleware(isRestricted, store))
+
 		// create server and start listening
 		srv := &http.Server{
 			Handler:      router,
-			Addr:         "0.0.0.0:" + c.String("port"),
+			Addr:         fmt.Sprintf("0.0.0.0:%d", c.Int(FlagPort)),
 			WriteTimeout: 15 * time.Second,
 			ReadTimeout:  15 * time.Second,
 		}
@@ -110,7 +188,7 @@ func main() {
 		go func() {
 			log.Println("[INFO] listening on", srv.Addr)
 			if err := srv.ListenAndServe(); err != nil {
-				log.Fatalln("[ERROR]", err)
+				log.Println("[ERROR]", err)
 			}
 		}()
 
@@ -136,7 +214,7 @@ func main() {
 	}
 }
 
-func newHTTPClient() *http.Client {
+func newHttpClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
@@ -149,58 +227,4 @@ func newHTTPClient() *http.Client {
 		},
 		Timeout: time.Second * 15,
 	}
-}
-
-func initFlags(app *cli.App) {
-	app.Name = config.AppName
-	app.Usage = config.AppDescription
-	app.HelpName = config.AppName
-
-	for _, f := range config.GetAppFlags() {
-		switch f.FlagType {
-		case config.FTString:
-			fl := cli.StringFlag{
-				Name:   f.Name,
-				EnvVar: f.EnvVar,
-				Value:  f.Value,
-			}
-			app.Flags = append(app.Flags, fl)
-		case config.FTBool:
-			fl := cli.BoolFlag{
-				Name:   f.Name,
-				EnvVar: f.EnvVar,
-			}
-			app.Flags = append(app.Flags, fl)
-		}
-	}
-}
-
-func validateConfig(c *cli.Context) error {
-	err := multierror.Error{}
-
-	for _, f := range config.GetAppFlags() {
-		log.Printf("[DEBUG] flag:'%s' value:'%s'\n", f.Name, c.String(f.Name))
-		value := c.String(f.Name)
-
-		if f.Required && value == "" {
-			if err.Errors == nil {
-				err.Errors = []error{}
-			}
-
-			errorMessage := fmt.Sprintf("Flag --%s ", f.Name)
-			if f.EnvVar != "" {
-				errorMessage += fmt.Sprintf("or EnvVar: %s ", f.EnvVar)
-			}
-			errorMessage += "not set"
-			err.Errors = append(err.Errors, fmt.Errorf(errorMessage))
-		}
-
-		if f.Validate != nil && value != "" {
-			if er := f.Validate(value); er != nil {
-				err.Errors = append(err.Errors, er)
-			}
-		}
-	}
-
-	return err.ErrorOrNil()
 }
