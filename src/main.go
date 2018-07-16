@@ -135,7 +135,7 @@ func main() {
 			c.String(FlagAuth0Connection),
 			c.String(FlagAuth0ClientID),
 			c.String(FlagClusterName),
-			newHttpClient(),
+			newHTTPClient(),
 		)
 		awsClient := aws.NewClient(
 			c.String(FlagClusterName),
@@ -188,7 +188,7 @@ func main() {
 		go func() {
 			log.Println("[INFO] listening on", srv.Addr)
 			if err := srv.ListenAndServe(); err != nil {
-				log.Println("[ERROR]", err)
+				log.Fatal(err)
 			}
 		}()
 
@@ -214,7 +214,7 @@ func main() {
 	}
 }
 
-func newHttpClient() *http.Client {
+func newHTTPClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
