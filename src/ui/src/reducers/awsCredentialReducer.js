@@ -1,4 +1,4 @@
-import { ADD_CREDENTIALS, DELETE_CREDENTIALS, INVALID_CREDENTIALS } from '../actions/aws-credential-actions'
+import { ADD_CREDENTIALS, DELETE_CREDENTIALS, INVALID_CREDENTIALS } from '../actions/awsCredentialActions'
 
 export default function credentialsReducer(state = {valid: false}, { type, payload }) {
   switch (type) {

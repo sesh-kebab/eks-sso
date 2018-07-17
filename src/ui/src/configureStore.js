@@ -1,10 +1,10 @@
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import authReducer from './reducers/auth-reducer';
-import credentialsReducer from './reducers/aws-credential-reducer';
-import loginReducer from './reducers/login-reducer';
-import iamAddModalReducer from './reducers/iam-modal-reducer';
+import authReducer from './reducers/authReducer';
+import credentialsReducer from './reducers/awsCredentialReducer';
+import loginReducer from './reducers/loginReducer';
+import iamAddModalReducer from './reducers/iamModalReducer';
 import { loadState, saveState } from './localStorage';
 import throttle from 'lodash/throttle';
 

@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withTheme } from '@material-ui/core/styles';
-import { authenticate } from '../../actions/auth-actions'
-import { addCredentials } from '../../actions/aws-credential-actions'
+import { authenticate } from '../../actions/authActions'
+import { addCredentials } from '../../actions/awsCredentialActions'
 
 import HomeComponent from './HomeComponent'
 

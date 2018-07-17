@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { authenticate } from '../../actions/auth-actions'
+import { authenticate } from '../../actions/authActions'
 import { withStyles } from '@material-ui/core/styles';
 import LoginComponent from './LoginComponent';
 

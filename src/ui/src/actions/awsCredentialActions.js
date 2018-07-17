@@ -1,4 +1,4 @@
-import { addStart, addSuccess, addError} from './iam-modal-actions'
+import { addStart, addSuccess, addError} from './iamModalActions'
 
 export const ADD_CREDENTIALS = 'credentials:authenticate';
 export const DELETE_CREDENTIALS = 'credentials:logout';

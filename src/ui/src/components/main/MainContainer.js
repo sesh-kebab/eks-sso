@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { logout } from '../../actions/auth-actions'
-import { addCredentials } from '../../actions/aws-credential-actions'
-import { showIAMAddModal } from '../../actions/iam-modal-actions'
+import { logout } from '../../actions/authActions'
+import { addCredentials } from '../../actions/awsCredentialActions'
+import { showIAMAddModal } from '../../actions/iamModalActions'
 import MainComponent from "./MainComponent";
 
 const drawerWidth = 240;

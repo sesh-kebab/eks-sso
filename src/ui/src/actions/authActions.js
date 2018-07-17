@@ -1,4 +1,4 @@
-import {loginStart, loginError} from './login-actions';
+import {loginStart, loginError} from './loginActions';
 
 export const AUTHENTICATE_USER = 'user:authenticate';
 export const LOGOUT_USER = 'user:logout';
