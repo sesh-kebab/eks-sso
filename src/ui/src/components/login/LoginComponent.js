@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
+import PropTypes from '../../../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/prop-types';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 
@@ -13,23 +13,12 @@ class LoginComponent extends Component {
     this.state = {
       username: '',
       password: '',
-      submitted: true,
-      passwordError: false,
     }
-
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit = event => {
     event.preventDefault();
     const { username, password } = this.state;
-
-    if (password === '') {
-      this.setState({ passwordError: true });
-      return;
-    }
-
-    this.setState({ submitted: true });
     this.props.authenticate(username, password);
   }
 

@@ -21,7 +21,7 @@ const hideIAMAddModal = () => ({
   },
 });
 
-const addStart = () => ({
+const onAddStart = () => ({
   type: IAM_ADD_START,
   payload: {
     show: true,
@@ -29,7 +29,7 @@ const addStart = () => ({
   },
 });
 
-const addError = (message) => ({
+const onAddError = (message) => ({
   type: IAM_ADD_ERROR,
   payload: {
     show: true,
@@ -38,7 +38,7 @@ const addError = (message) => ({
   },
 });
 
-const addSuccess = () => ({
+const onAddSuccess = () => ({
   type: IAM_ADD_SUCCESS,
   payload: {
     show: false,
@@ -46,4 +46,4 @@ const addSuccess = () => ({
   },
 });
 
-export {showIAMAddModal, hideIAMAddModal, addStart, addError, addSuccess};
+export {showIAMAddModal, hideIAMAddModal, onAddStart, onAddError, onAddSuccess};

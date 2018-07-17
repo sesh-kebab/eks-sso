@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../../../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/prop-types';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,7 +7,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Typography } from '../../../node_modules/@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 export default class AddIAMUserModalComponent extends React.Component {
   static propTypes = {

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom'
 import Login from './components/login/LoginContainer';
-import Home from './components/home/HomeContainer';
+import Main from './components/main/MainContainer';
 import { connect } from 'react-redux';
 import { withTheme, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -23,23 +23,17 @@ const theme = createMuiTheme({
   },
 });
 
-class App extends Component {
-  render() {
-    return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      {!this.props.auth.authenticated ? <Login /> : <Home />}
-    </MuiThemeProvider>
-    )
-  }
-}
+const App = props => (
+  <MuiThemeProvider theme={theme}>
+    <CssBaseline />
+    {!props.auth.authenticated ? <Login />: <Main />}
+  </MuiThemeProvider>
+)
 
-const mapStateToProps = ({user, auth}) => ({
-  user,
+const mapStateToProps = ({auth}) => ({
   auth
 });
 
 export default withRouter(connect(
   mapStateToProps
 )(withTheme()(App)));
-

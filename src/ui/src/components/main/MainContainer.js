@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { logout } from '../../actions/authActions'
+import { logoutUser } from '../../actions/authenticateActions'
 import { addCredentials } from '../../actions/awsCredentialActions'
-import { showIAMAddModal } from '../../actions/iamModalActions'
+import { showIAMAddModal } from '../../actions/iamAddUserModalActions'
 import MainComponent from "./MainComponent";
 
 const drawerWidth = 240;
@@ -40,7 +40,7 @@ const mapStateToProps = state => ({
 });
 
 const mapActionsToProps = ({
-  logout: logout,
+  logout: logoutUser,
   addCredentials: addCredentials,
   showIAMAddModal: showIAMAddModal,
 });

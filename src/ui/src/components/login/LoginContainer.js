@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { authenticate } from '../../actions/authActions'
+import { authenticateUser } from '../../actions/authenticateActions'
 import { withStyles } from '@material-ui/core/styles';
 import LoginComponent from './LoginComponent';
 
@@ -30,7 +30,7 @@ const mapStateToProps = state => ({
 });
 
 const mapActionsToProps = ({
-  authenticate: authenticate,
+  authenticate: authenticateUser,
 });
 
 export default connect(

@@ -1,9 +1,9 @@
-import {loginStart, loginError} from './loginActions';
+import { loginStart, loginError } from './loginActions';
 
 export const AUTHENTICATE_USER = 'user:authenticate';
 export const LOGOUT_USER = 'user:logout';
 
-const updateAuthenticatedUser = (
+const onUserAuthenticated = (
   username, givenName, pictureUrl, clusterName
 ) => {
   return {
@@ -20,7 +20,7 @@ const updateAuthenticatedUser = (
   };
 }
 
-const logoutUser = () => {
+const onUserLoggedOut = () => {
   return {
     type: LOGOUT_USER,
     payload: {
@@ -35,8 +35,8 @@ const logoutUser = () => {
   }
 }
 
-export function authenticate(username, password) {
-  return dispatch => {
+const authenticateUser = (username, password) => (
+  (dispatch, getState, api) => {
     const data = {
       username: username,
       password: password
@@ -44,15 +44,16 @@ export function authenticate(username, password) {
 
     dispatch(loginStart());
 
-    postData('/authenticate', data).then(o => {
-      if (o.status >= 400) {
-        throw Error(o.statusText);
-      }
+    api.postData('/authenticate', data)
+      .then(o => {
+        if (o.status >= 300) {
+          throw Error(o.statusText);
+        }
 
-      return o.json();
-    })
+        return o.json();
+      })
       .then(j => {
-        dispatch(updateAuthenticatedUser(
+        dispatch(onUserAuthenticated(
           j.username,
           j.givenName,
           j.pictureUrl,
@@ -64,22 +65,13 @@ export function authenticate(username, password) {
         dispatch(loginError(e.message))
       })
   }
-}
+);
 
-export function logout() {
-  return dispatch => {
-    dispatch(logoutUser())
+//todo: make a server side request as well to update cookie
+const logoutUser = () => (
+  dispatch => {
+    dispatch(onUserLoggedOut())
   }
-}
+)
 
-const postData = (url, data) => {
-  return fetch(url, {
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    cache: 'no-cache',
-    method: 'POST',
-    credentials: 'same-origin',
-  });
-}
+export { authenticateUser, logoutUser };

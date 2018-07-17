@@ -1,4 +1,4 @@
-import { IAM_MODAL_SHOW, IAM_ADD_START, IAM_ADD_ERROR, IAM_ADD_SUCCESS } from '../actions/iamModalActions'
+import { IAM_MODAL_SHOW, IAM_ADD_START, IAM_ADD_ERROR, IAM_ADD_SUCCESS } from '../actions/iamAddUserModalActions'
 
 const initialState = {
   show: false,

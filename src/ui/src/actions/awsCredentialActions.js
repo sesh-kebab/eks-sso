@@ -1,30 +1,30 @@
-import { addStart, addSuccess, addError} from './iamModalActions'
+import { onAddStart, onAddSuccess, onAddError} from './iamAddUserModalActions'
 
 export const ADD_CREDENTIALS = 'credentials:authenticate';
 export const DELETE_CREDENTIALS = 'credentials:logout';
 export const INVALID_CREDENTIALS = 'credentials:invalid';
 
 
-export function addCredentials(accessId, secretKey) {
-  return dispatch => {
-    dispatch(addStart());
+const addCredentials = (accessId, secretKey) => (
+  (dispatch, getState, api) => {
+    dispatch(onAddStart());
     const data = {
       accessId,
       secretKey
     };
 
-    postData('/credentials', data).then(o => {
+    api.postData('/credentials', data).then(o => {
       return o.json();
     })
       .then(j => {
-        dispatch(addSuccess());
+        dispatch(onAddSuccess());
         dispatch(add(j.username));
       })
       .catch(e => {
-        dispatch(addError(e.message))
+        dispatch(onAddError(e.message))
       })
   }
-}
+);
 
 const add = (user) => {
   return {
@@ -36,15 +36,4 @@ const add = (user) => {
   }
 }
 
-
-const postData = (url, data) => {
-  return fetch(url, {
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    cache: 'no-cache',
-    method: 'POST',
-    credentials: 'same-origin',
-  })
-}
+export { addCredentials };

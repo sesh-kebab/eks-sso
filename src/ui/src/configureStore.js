@@ -1,12 +1,15 @@
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import throttle from 'lodash/throttle';
+
 import authReducer from './reducers/authReducer';
 import credentialsReducer from './reducers/awsCredentialReducer';
 import loginReducer from './reducers/loginReducer';
 import iamAddModalReducer from './reducers/iamModalReducer';
+
 import { loadState, saveState } from './localStorage';
-import throttle from 'lodash/throttle';
+import api from './api';
 
 const configureStore = () => {
 
@@ -18,7 +21,7 @@ const configureStore = () => {
   });
 
   const allStoreEnhancers = composeWithDevTools(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk.withExtraArgument(api)),
   );
 
   const persistedState = loadState();
