@@ -1,39 +1,17 @@
 package auth
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"net/url"
 
 	"github.com/quintilesims/eks-sso/pkg/models"
-)
-
-const (
-	authEndpoint    = "/oauth/ro"
-	profileEndpoint = "/userinfo"
+	"github.com/zpatrick/rclient"
 )
 
 // Authenticator represents the interface to handle user authentication,
 // typically with user credentials such as username and password.
 type Authenticator interface {
 	Authenticate(username, password string) (*models.AuthReponse, error)
-}
-
-func NewAuth0Authenticator(domain, connection, clientID, cluster string, client *http.Client) *Auth0Authenticator {
-	a := &Auth0Authenticator{
-		clientID:   clientID,
-		connection: connection,
-		domain:     domain,
-		cluster:    cluster,
-		httpClient: client,
-	}
-
-	log.Printf("[DEBUG] new auth0 authenticator %#v\n", a)
-	return a
 }
 
 // Auth0Authenticator exposes functionality to authenticate a user via the
@@ -43,10 +21,29 @@ type Auth0Authenticator struct {
 	connection string
 	domain     string
 	cluster    string
-	httpClient *http.Client
+	client     *rclient.RestClient
 }
 
-type auth0ProfileResponse struct {
+func NewAuth0Authenticator(domain, connection, clientID, cluster string) *Auth0Authenticator {
+	return &Auth0Authenticator{
+		clientID:   clientID,
+		connection: connection,
+		domain:     domain,
+		cluster:    cluster,
+		client:     rclient.NewRestClient(domain),
+	}
+}
+
+type oauthReq struct {
+	ClientID   string `json:"client_id"`
+	Connection string `json:"connection"`
+	Username   string `json:"username"`
+	Password   string `json:"password"`
+	GrantType  string `json:"grant_type"`
+	Scope      string `json:"scope"`
+}
+
+type auth0Profile struct {
 	Name      string `json:"name"`
 	GivenName string `json:"given_name"`
 	Picture   string `json:"picture"`
@@ -54,113 +51,58 @@ type auth0ProfileResponse struct {
 
 // Authenticates user credentials and returns the user's profile information
 func (a *Auth0Authenticator) Authenticate(username, password string) (*models.AuthReponse, error) {
-	path, err := a.joinURL(authEndpoint)
+	log.Printf("[DEBUG] Attempting to authenticate user '%s' through Auth0", username)
+
+	token, err := a.getAccessToken(username, password)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] requesting authentication for user: '%s' from: '%s'\n",
-		username,
-		path,
-	)
-
-	values := map[string]string{
-		"username":   username,
-		"password":   password,
-		"client_id":  a.clientID,
-		"connection": a.connection,
-		"scope":      "openid",
-	}
-
-	reqBody, err := json.Marshal(values)
+	profile, err := a.getProfile(token)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(path, "application/json", bytes.NewBuffer(reqBody))
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("could not authenticate. status:%d", resp.StatusCode)
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var tokenResponse map[string]string
-	if err := json.Unmarshal(body, &tokenResponse); err != nil {
-		return nil, err
-	}
-
-	token, ok := tokenResponse["access_token"]
-	if !ok {
-		return nil, fmt.Errorf("'access_token' not present in auth0 auth response")
-	}
-
-	pr, err := a.getAuth0Profile(token)
-	if err != nil {
-		return nil, err
-	}
-
-	return &models.AuthReponse{
+	resp := &models.AuthReponse{
 		Authenticated: true,
-		Username:      pr.Name,
-		GivenName:     pr.GivenName,
-		Picture:       pr.Picture,
+		Username:      profile.Name,
+		GivenName:     profile.GivenName,
+		Picture:       profile.Picture,
 		Cluster:       a.cluster,
-	}, nil
+	}
+
+	return resp, nil
 }
 
-func (a *Auth0Authenticator) getAuth0Profile(token string) (*auth0ProfileResponse, error) {
-	path, err := a.joinURL(profileEndpoint)
-	if err != nil {
-		return nil, err
+func (a *Auth0Authenticator) getAccessToken(username, password string) (string, error) {
+	req := oauthReq{
+		ClientID:   a.clientID,
+		Connection: a.connection,
+		Username:   username,
+		Password:   password,
+		GrantType:  "password",
+		Scope:      "openid",
 	}
 
-	log.Println("[DEBUG] requesting profile info from:", path)
-
-	req, err := http.NewRequest("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-	resp, err := a.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Could not authenticate")
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var pr auth0ProfileResponse
-	if err := json.Unmarshal(body, &pr); err != nil {
-		return nil, err
-	}
-
-	return &pr, nil
-}
-
-func (a Auth0Authenticator) joinURL(path string) (string, error) {
-	base, err := url.Parse(a.domain)
-	if err != nil {
+	var resp map[string]string
+	if err := a.client.Post("/oauth/ro", req, &resp); err != nil {
 		return "", err
 	}
 
-	p, err := url.Parse(path)
-	if err != nil {
-		return "", err
+	token, ok := resp["access_token"]
+	if !ok {
+		return "", fmt.Errorf("'access_token' not present in auth0 auth response")
 	}
-	return fmt.Sprintf("%s", base.ResolveReference(p)), nil
+
+	return token, nil
+}
+
+func (a *Auth0Authenticator) getProfile(token string) (*auth0Profile, error) {
+	var resp auth0Profile
+	header := rclient.Header("Authorization", fmt.Sprintf("Bearer %s", token))
+	if err := a.client.Get("/userinfo", &resp, header); err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
 }
