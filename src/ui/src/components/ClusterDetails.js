@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from '../../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/prop-types';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';

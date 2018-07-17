@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from '../../../../../../../../../../Library/Caches/typescript/2.9/node_modules/@types/prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
