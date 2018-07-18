@@ -28,67 +28,46 @@ const styles = theme => ({
   }
 });
 
-class LoginComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      username: '',
-      password: '',
-    }
-  }
-
-  handleSubmit = event => {
-    event.preventDefault();
-    const { username, password } = this.state;
-    this.props.authenticate(username, password);
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <Paper className={classes.root} elevation={4} >
-        <div className={classes.header}>
-          <Typography variant="title">
-            EKS
+const LoginComponent = ({ classes, username, password, onUsernameChange, onPasswordChange, onSubmit, authenticate, login}) => {
+  console.log(login);
+  return (
+    <Paper className={classes.root} elevation={4} >
+      <div className={classes.header}>
+        <Typography variant="title">
+          EKS
           </Typography>
+      </div>
+      {/* todo: update to Redux Form and validation */}
+      <form action="/login" onSubmit={onSubmit}>
+        <div>
+          <TextField
+            required={true}
+            autoFocus={true}
+            className={classes.text}
+            label="Username"
+            onChange={onUsernameChange}
+          />
+          {/* todo: remove line breaks and add jss for spacing */}
+          <br /><br />
+          <TextField
+            required={true}
+            className={classes.text}
+            type="password"
+            label="Password"
+            onChange={onPasswordChange}
+          />
+          <br /><br /><br />
+          <Typography variant="body1" color="error">
+            {login.message}
+          </Typography>
+          <Button className={classes.text} type="submit" color="primary">
+            Login
+          </Button>
+          <br />
         </div>
-        {/* todo: update to Redux Form and validation */}
-        <form action="/login" onSubmit={this.handleSubmit}>
-          <div>
-            <TextField
-              required={true}
-              autoFocus={true}
-              className={classes.text}
-              label="Username"
-              onChange={(event) => this.setState({ username: event.target.value })}
-            />
-            {/* todo: remove line breaks and add jss for spacing */}
-            <br /><br />
-            <TextField
-              required={true}
-              className={classes.text}
-              type="password"
-              label="Password"
-              onChange={(event) => this.setState({ password: event.target.value })}
-            />
-            <br /><br /><br />
-            <Typography variant="body1" color="error">
-              {this.props.login.message}
-            </Typography>
-            <Button className={classes.text} type="submit" color="primary">
-              Login
-            </Button>
-            <br />
-          </div>
-        </form>
-      </Paper>
-    );
-  }
-}
-
-LoginComponent.propTypes = {
-  classes: PropTypes.object.isRequired,
+      </form>
+    </Paper>
+  );
 }
 
 export default withStyles(styles)(centerOnPage(LoginComponent));
