@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
-import { addCredentials } from '../../actions/awsCredentialActions'
+import { compose, setDisplayName, withStateHandlers } from 'recompose';
+
+import { addCredentials } from '../../actions/awsCredentialActions';
 import { hideIAMAddModal } from '../../actions/iamAddUserModalActions';
 import AddIAMUserModalComponent from './AddIAMUserModalComponent';
 
 const mapStateToProps = state => ({
-  credentials: state.credentials,
   iamModal: state.iamModal,
 });
 
@@ -13,7 +14,35 @@ const mapActionsToProps = {
   hideModal: hideIAMAddModal,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(AddIAMUserModalComponent);
+const enhance = compose(
+  setDisplayName('AddIamUserModal'),
+  connect(
+    mapStateToProps,
+    mapActionsToProps
+  ),
+  withStateHandlers(
+    () => ({
+      accessId: '',
+      secretKey: '',
+    }),
+    {
+      onAccessIdChange: state => event => {
+        state.accessId = event.target.value;
+        return state;
+      },
+      onSecretKeyChange: state => event => {
+        state.secretKey = event.target.value;
+        return state;
+      },
+      onClose: (state, props) => () => {
+        props.hideModal();
+      },
+      onSubmit: (state, props) => event => {
+        event.preventDefault();
+        props.addCredentials(state.accessId, state.secretKey);
+      },
+    }
+  )
+);
+
+export default enhance(AddIAMUserModalComponent);
