@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
-import AddIAMUserModalComponent from './AddIAMUserModalComponent'
 import { addCredentials } from '../../actions/awsCredentialActions'
-import { hideIAMAddModal } from '../../actions/iamAddUserModalActions'
+import { hideIAMAddModal } from '../../actions/iamAddUserModalActions';
+import AddIAMUserModalComponent from './AddIAMUserModalComponent';
 
 const mapStateToProps = state => ({
   credentials: state.credentials,
   iamModal: state.iamModal,
 });
 
-const mapActionsToProps = ({
+const mapActionsToProps = {
   addCredentials: addCredentials,
   hideModal: hideIAMAddModal,
-});
+};
 
 export default connect(
   mapStateToProps,

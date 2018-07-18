@@ -1,18 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import PersonIcon from '@material-ui/icons/Person'
-import ExitIcon from '@material-ui/icons/ExitToApp'
-import { withStyles } from '@material-ui/core/styles';
-
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PersonIcon from '@material-ui/icons/Person';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   flex: {
@@ -23,7 +22,6 @@ const styles = theme => ({
   },
 });
 
-
 class AppBarComponent extends React.Component {
   static propTypes = {
     openMenu: PropTypes.func,
@@ -33,31 +31,28 @@ class AppBarComponent extends React.Component {
     userPictureUrl: PropTypes.string,
     addCredentials: PropTypes.func,
     logout: PropTypes.func,
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
-      anchorEl: props.anchorEl || null
+      anchorEl: props.anchorEl || null,
     };
   }
 
   toggleMenu = event => {
     this.setState({
-      anchorEl:
-        this.state.anchorEl == null ?
-          event.currentTarget :
-          null
+      anchorEl: this.state.anchorEl == null ? event.currentTarget : null,
     });
-  }
+  };
 
   openMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   closeMenu = () => {
-    this.setState({ anchorEl: null })
-  }
+    this.setState({ anchorEl: null });
+  };
 
   render() {
     const { anchorEl } = this.state;
@@ -78,9 +73,11 @@ class AppBarComponent extends React.Component {
           <Typography variant="title" color="inherit" className={classes.flex} noWrap>
             {clusterName}
           </Typography>
-          {iamUserName && <Typography variant="subheading" color="inherit" noWrap>
-            IAM User: {iamUserName}
-          </Typography>}
+          {iamUserName && (
+            <Typography variant="subheading" color="inherit" noWrap>
+              IAM User: {iamUserName}
+            </Typography>
+          )}
           <IconButton
             aria-owns={open ? 'menu-appbar' : null}
             aria-haspopup="true"
@@ -103,12 +100,18 @@ class AppBarComponent extends React.Component {
             open={open}
             onClose={this.closeMenu}
           >
-            {iamUserName && <MenuItem className={classes.menuItem} onClick={showIAMModal}>
-              <ListItemIcon className={classes.icon}>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText classes={{ primary: classes.primary }} inset primary="Change IAM User" />
-            </MenuItem>}
+            {iamUserName && (
+              <MenuItem className={classes.menuItem} onClick={showIAMModal}>
+                <ListItemIcon className={classes.icon}>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText
+                  classes={{ primary: classes.primary }}
+                  inset
+                  primary="Change IAM User"
+                />
+              </MenuItem>
+            )}
             <MenuItem className={classes.menuItem} onClick={logout}>
               <ListItemIcon className={classes.icon}>
                 <ExitIcon />
@@ -122,4 +125,4 @@ class AppBarComponent extends React.Component {
   }
 }
 
-export default (withStyles(styles)(AppBarComponent));
+export default withStyles(styles)(AppBarComponent);

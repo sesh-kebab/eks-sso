@@ -1,9 +1,14 @@
-import { IAM_MODAL_SHOW, IAM_ADD_START, IAM_ADD_ERROR, IAM_ADD_SUCCESS } from '../actions/iamAddUserModalActions'
+import {
+  IAM_ADD_ERROR,
+  IAM_ADD_START,
+  IAM_ADD_SUCCESS,
+  IAM_MODAL_SHOW,
+} from '../actions/iamAddUserModalActions';
 
 const initialState = {
   show: false,
   message: '',
-}
+};
 export default function authReducer(state = initialState, { type, payload }) {
   switch (type) {
     case IAM_MODAL_SHOW:

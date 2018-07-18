@@ -1,11 +1,12 @@
-import React from 'react';
 import { Route } from 'react-router-dom';
-import ClusterDetail from '../ClusterDetails';
-import AppBarComponent from './AppBarComponent';
-import SideBarComponent from './SideBarComponent';
-import LandingPage from './LandingPageComponent';
 import { withStyles } from '@material-ui/core/styles';
+
+import React from 'react';
 import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer'
+import AppBarComponent from './AppBarComponent';
+import ClusterDetail from '../ClusterDetails';
+import LandingPage from './LandingPageComponent';
+import SideBarComponent from './SideBarComponent';
 
 const drawerWidth = 240;
 
@@ -49,7 +50,6 @@ class MainComponent extends React.Component {
     const { classes } = this.props;
 
     return (
-
       <div className={classes.root}>
         <AppBarComponent
           userName={this.props.auth.givenName}
@@ -66,9 +66,9 @@ class MainComponent extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
-          <Route exact path="/" component={LandingPage}/>
+          <Route exact path="/" component={LandingPage} />
           <Route path="/cluster" component={ClusterDetail} />
-          
+
           <AddIAMUserModalComponent />
         </main>
       </div>
@@ -76,4 +76,4 @@ class MainComponent extends React.Component {
   }
 }
 
-export default (withStyles(styles)(MainComponent));
+export default withStyles(styles)(MainComponent);

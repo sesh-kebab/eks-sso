@@ -1,23 +1,22 @@
+import { compose, setDisplayName, withProps, withStateHandlers } from 'recompose';
 import { connect } from 'react-redux';
 import { authenticateUser } from '../../actions/authenticateActions'
 import LoginComponent from './LoginComponent';
-import { setDisplayName, withStateHandlers, compose, withProps } from 'recompose';
-
 
 const mapStateToProps = state => ({
   auth: state.auth,
   login: state.login,
 });
 
-const mapActionsToProps = ({
+const mapActionsToProps = {
   authenticate: authenticateUser,
-});
+};
 
 const enhance = compose(
   setDisplayName('Login'),
   connect(
     mapStateToProps,
-    mapActionsToProps,
+    mapActionsToProps
   ),
   withStateHandlers(
     ({}) => ({
@@ -25,19 +24,19 @@ const enhance = compose(
       password: '',
     }),
     {
-      onUsernameChange: (state) => (event) => {
+      onUsernameChange: state => event => {
         state.username = event.target.value;
         return state;
       },
-      onPasswordChange: (state) => (event) => {
+      onPasswordChange: state => event => {
         state.password = event.target.value;
         return state;
       },
-      onSubmit: (state, props) => (event) => {
+      onSubmit: (state, props) => event => {
         event.preventDefault();
         props.authenticate(state.username, state.password);
-      }
-    },
+      },
+    }
   )
 );
 

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import TextField from '@material-ui/core/TextField';
 
 import centerOnPage from './PageCenterComponent';
 
@@ -25,38 +25,48 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 2,
     maxWidth: 245,
-  }
+  },
 });
 
-const LoginComponent = ({ classes, username, password, onUsernameChange, onPasswordChange, onSubmit, authenticate, login}) => {
+const LoginComponent = ({
+  classes,
+  username,
+  password,
+  onUsernameChange,
+  onPasswordChange,
+  onSubmit,
+  authenticate,
+  login,
+}) => {
   console.log(login);
   return (
-    <Paper className={classes.root} elevation={4} >
+    <Paper className={classes.root} elevation={4}>
       <div className={classes.header}>
-        <Typography variant="title">
-          EKS
-          </Typography>
+        <Typography variant="title">EKS</Typography>
       </div>
       {/* todo: update to Redux Form and validation */}
       <form action="/login" onSubmit={onSubmit}>
         <div>
           <TextField
-            required={true}
-            autoFocus={true}
+            required
+            autoFocus
             className={classes.text}
             label="Username"
             onChange={onUsernameChange}
           />
           {/* todo: remove line breaks and add jss for spacing */}
-          <br /><br />
+          <br />
+          <br />
           <TextField
-            required={true}
+            required
             className={classes.text}
             type="password"
             label="Password"
             onChange={onPasswordChange}
           />
-          <br /><br /><br />
+          <br />
+          <br />
+          <br />
           <Typography variant="body1" color="error">
             {login.message}
           </Typography>
@@ -68,6 +78,6 @@ const LoginComponent = ({ classes, username, password, onUsernameChange, onPassw
       </form>
     </Paper>
   );
-}
+};
 
 export default withStyles(styles)(centerOnPage(LoginComponent));

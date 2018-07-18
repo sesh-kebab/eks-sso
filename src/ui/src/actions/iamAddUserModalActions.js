@@ -29,7 +29,7 @@ const onAddStart = () => ({
   },
 });
 
-const onAddError = (message) => ({
+const onAddError = message => ({
   type: IAM_ADD_ERROR,
   payload: {
     show: true,
@@ -46,4 +46,4 @@ const onAddSuccess = () => ({
   },
 });
 
-export {showIAMAddModal, hideIAMAddModal, onAddStart, onAddError, onAddSuccess};
+export { showIAMAddModal, hideIAMAddModal, onAddStart, onAddError, onAddSuccess };

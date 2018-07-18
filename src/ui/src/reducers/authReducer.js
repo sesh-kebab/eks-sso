@@ -1,4 +1,4 @@
-import { AUTHENTICATE_USER, LOGOUT_USER } from '../actions/authenticateActions'
+import { AUTHENTICATE_USER, LOGOUT_USER } from '../actions/authenticateActions';
 
 export default function authReducer(state = {}, { type, payload }) {
   switch (type) {

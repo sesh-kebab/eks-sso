@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from "@material-ui/core";
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FileCopy from '@material-ui/icons/FileDownload';
+import PropTypes from 'prop-types';
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   textField: {
@@ -33,7 +33,7 @@ const styles = theme => ({
   toolbar: {
     position: 'relative',
     display: 'flex',
-  }
+  },
 });
 
 class ClusterDetails extends React.Component {
@@ -45,11 +45,11 @@ class ClusterDetails extends React.Component {
       kubeconfig: '',
       status: '',
       name: '',
-    }
+    };
   }
 
   componentDidMount() {
-    fetch("/cluster", {
+    fetch('/cluster', {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
@@ -58,14 +58,14 @@ class ClusterDetails extends React.Component {
       credentials: 'same-origin',
     })
       .then(o => {
-        return o.json()
+        return o.json();
       })
       .then(j => {
         this.setState({ kubeconfig: j.kubeconfig });
       })
       .catch(e => {
         console.log(e);
-      })
+      });
   }
 
   render() {
@@ -95,8 +95,8 @@ class ClusterDetails extends React.Component {
           value={this.state.kubeconfig}
           className={classes.textField}
           margin="normal"
-          disabled={true}
-          fullWidth={true}
+          disabled
+          fullWidth
         />
       </div>
     );

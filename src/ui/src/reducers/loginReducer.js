@@ -1,4 +1,4 @@
-import { LOGIN_START, LOGIN_ERROR } from '../actions/loginActions'
+import { LOGIN_ERROR, LOGIN_START } from '../actions/loginActions';
 
 export default function authReducer(state = {}, { type, payload }) {
   switch (type) {

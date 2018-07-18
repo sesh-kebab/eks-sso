@@ -1,7 +1,7 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import React from 'react';
 
-const centerOnPage = (WrappedComponent) => {
+const centerOnPage = WrappedComponent => {
   class CenterOnPageComponent extends React.Component {
     render() {
       return (
@@ -9,9 +9,7 @@ const centerOnPage = (WrappedComponent) => {
           <Grid item xs={12}>
             <Grid container justify="center">
               <Grid item>
-
                 <WrappedComponent {...this.props} />
-
               </Grid>
             </Grid>
           </Grid>
