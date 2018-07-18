@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import ClusterDetail from '../ClusterDetails';
+import NamespacesDetail from '../NamespacesDetails';
 import AppBarComponent from './AppBarComponent';
 import SideBarComponent from './SideBarComponent';
 import LandingPage from './LandingPageComponent';
@@ -68,7 +69,7 @@ class MainComponent extends React.Component {
 
           <Route exact path="/" component={LandingPage}/>
           <Route path="/cluster" component={ClusterDetail} />
-          
+          <Route path="/namespaces" component={NamespacesDetail} />
           <AddIAMUserModalComponent />
         </main>
       </div>

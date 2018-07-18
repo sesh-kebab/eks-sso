@@ -46,3 +46,22 @@ func TestProvisionNamespace(t *testing.T) {
 	assert.Equal(t, roleName, rb.RoleRef.Name)
 	assert.Equal(t, "ClusterRole", rb.RoleRef.Kind)
 }
+
+func TestGetNamespacesEmpty(t *testing.T) {
+	km, err := NewKubernetesClient(false, "", fake.NewSimpleClientset())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	namespaces, err := km.GetNamespaces()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ns, err := km.client.CoreV1().Namespaces().List(v1.ListOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Len(t, namespaces, 0, ns.Items)
+}

@@ -77,7 +77,7 @@ class SideBarComponent extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="Users" />
               </ListItem>
-              <ListItem button>
+              <ListItem button component={Link} to="/namespaces">
                 <ListItemIcon>
                   <PortraitIcon />
                 </ListItemIcon>

@@ -5,6 +5,8 @@ import authReducer from './reducers/auth-reducer';
 import credentialsReducer from './reducers/aws-credential-reducer';
 import loginReducer from './reducers/login-reducer';
 import iamAddModalReducer from './reducers/iam-modal-reducer';
+import kubernetesReducer from './reducers/kubernetes-reducer';
+
 import { loadState, saveState } from './localStorage';
 import throttle from 'lodash/throttle';
 
@@ -15,6 +17,7 @@ const configureStore = () => {
     credentials: credentialsReducer,
     login: loginReducer,
     iamModal: iamAddModalReducer,
+    namespaces: kubernetesReducer,
   });
 
   const allStoreEnhancers = composeWithDevTools(

@@ -70,6 +70,7 @@ func main() {
 		}{
 			controllers.NewAuthController(auth0, sessionStore),
 			controllers.NewAWSController(awsClient, k8sClient, sessionStore),
+			controllers.NewKubernetesController(k8sClient, sessionStore),
 		}
 
 		// register routes for all the controllers
