@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
 import { compose, setDisplayName, withStateHandlers } from 'recompose';
+import { connect } from 'react-redux';
 
 import { addCredentials } from '../../actions/awsCredentialActions';
 import { hideIAMAddModal } from '../../actions/iamAddUserModalActions';

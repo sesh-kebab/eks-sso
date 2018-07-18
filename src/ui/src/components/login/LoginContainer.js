@@ -1,6 +1,7 @@
-import { compose, setDisplayName, withProps, withStateHandlers } from 'recompose';
+import { compose, setDisplayName, withStateHandlers } from 'recompose';
 import { connect } from 'react-redux';
-import { authenticateUser } from '../../actions/authenticateActions'
+
+import { authenticateUser } from '../../actions/authenticateActions';
 import LoginComponent from './LoginComponent';
 
 const mapStateToProps = state => ({
@@ -19,7 +20,7 @@ const enhance = compose(
     mapActionsToProps
   ),
   withStateHandlers(
-    ({}) => ({
+    () => ({
       username: '',
       password: '',
     }),

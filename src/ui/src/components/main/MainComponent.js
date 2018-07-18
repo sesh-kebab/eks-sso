@@ -1,8 +1,8 @@
 import { Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-
 import React from 'react';
-import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer'
+
+import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer';
 import AppBarComponent from './AppBarComponent';
 import ClusterDetail from '../ClusterDetails';
 import LandingPage from './LandingPageComponent';
@@ -75,5 +75,7 @@ class MainComponent extends React.Component {
     );
   }
 }
+
+MainComponent.displayName = 'MainComponent';
 
 export default withStyles(styles)(MainComponent);

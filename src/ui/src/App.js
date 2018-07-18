@@ -2,10 +2,10 @@ import { connect } from 'react-redux';
 import { createMuiTheme, MuiThemeProvider, withTheme } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import React from 'react';
 
 import Login from './components/login/LoginContainer';
 import Main from './components/main/MainContainer';
-import React from 'react';
 
 const theme = createMuiTheme({
   palette: {
@@ -30,6 +30,8 @@ const App = props => (
     {!props.auth.authenticated ? <Login /> : <Main />}
   </MuiThemeProvider>
 );
+
+App.displayName = 'App';
 
 const mapStateToProps = ({ auth }) => ({
   auth,

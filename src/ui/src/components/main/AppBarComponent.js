@@ -42,7 +42,7 @@ class AppBarComponent extends React.Component {
 
   toggleMenu = event => {
     this.setState({
-      anchorEl: this.state.anchorEl == null ? event.currentTarget : null,
+      anchorEl: this.state.anchorEl || event.currentTarget,
     });
   };
 
@@ -75,11 +75,12 @@ class AppBarComponent extends React.Component {
           </Typography>
           {iamUserName && (
             <Typography variant="subheading" color="inherit" noWrap>
-              IAM User: {iamUserName}
+              {'IAM User: '}
+              {iamUserName}
             </Typography>
           )}
           <IconButton
-            aria-owns={open ? 'menu-appbar' : null}
+            aria-owns={!(open && 'menu-appbar') && null}
             aria-haspopup="true"
             onClick={this.openMenu}
             color="inherit"
@@ -124,5 +125,7 @@ class AppBarComponent extends React.Component {
     );
   }
 }
+
+AppBarComponent.displayName = 'AppBarComponent';
 
 export default withStyles(styles)(AppBarComponent);

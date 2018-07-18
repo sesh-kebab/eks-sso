@@ -16,6 +16,6 @@ export const saveState = state => {
     const serializedState = JSON.stringify(state);
     localStorage.setItem('state', serializedState);
   } catch (err) {
-    console.warn('could not store state to local storage');
+    console.error('could not store state to local storage');
   }
 };

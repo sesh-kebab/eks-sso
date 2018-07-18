@@ -2,8 +2,7 @@ import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import centerOnPage from './PageCenterComponent';
@@ -38,11 +37,10 @@ const LoginComponent = ({
   authenticate,
   login,
 }) => {
-  console.log(login);
   return (
     <Paper className={classes.root} elevation={4}>
       <div className={classes.header}>
-        <Typography variant="title">EKS</Typography>
+        <Typography variant="title">{'EKS'}</Typography>
       </div>
       {/* todo: update to Redux Form and validation */}
       <form action="/login" onSubmit={onSubmit}>
@@ -71,7 +69,7 @@ const LoginComponent = ({
             {login.message}
           </Typography>
           <Button className={classes.text} type="submit" color="primary">
-            Login
+            {'Login'}
           </Button>
           <br />
         </div>
@@ -79,5 +77,7 @@ const LoginComponent = ({
     </Paper>
   );
 };
+
+LoginComponent.displayName = 'LoginComponent';
 
 export default withStyles(styles)(centerOnPage(LoginComponent));

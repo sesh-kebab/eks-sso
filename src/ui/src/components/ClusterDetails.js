@@ -75,12 +75,12 @@ class ClusterDetails extends React.Component {
       <div>
         <div className={classes.toolbar}>
           <Typography variant="subheading" className={classes.flex} noWrap>
-            Kube config
+            {'Kube config'}
           </Typography>
 
           <div className={classes.buttonContainer}>
             <Button variant="contained" className={classes.button}>
-              Copy
+              {'Copy'}
             </Button>
             <Button variant="contained" className={classes.button}>
               <FileCopy />
@@ -102,6 +102,8 @@ class ClusterDetails extends React.Component {
     );
   }
 }
+
+ClusterDetails.displayName = 'ClusterDetails';
 
 ClusterDetails.propTypes = {
   classes: PropTypes.object.isRequired,

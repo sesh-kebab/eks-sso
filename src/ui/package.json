@@ -37,7 +37,10 @@
     "extends": [
       "eslint:recommended",
       "plugin:iqvia/recommended"
-    ]
+    ],
+    "rules": {
+      "no-console": "off"
+    }
   },
   "lint-staged": {
     "./*.js": "lint"

@@ -96,4 +96,6 @@ class SideBarComponent extends React.Component {
   }
 }
 
+SideBarComponent.displayName = 'SideBarComponent';
+
 export default withStyles(styles)(SideBarComponent);

@@ -18,6 +18,8 @@ const centerOnPage = WrappedComponent => {
     }
   }
 
+  CenterOnPageComponent.displayName = 'CenterOnPageComponent';
+
   return CenterOnPageComponent;
 };
 

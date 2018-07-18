@@ -10,21 +10,20 @@ import TextField from '@material-ui/core/TextField';
 
 const AddIAMUserModalComponent = ({
   iamModal,
-  accessId, 
-  secretKey, 
+  accessId,
+  secretKey,
   onAccessIdChange,
   onSecretKeyChange,
   addCredentials,
   hideModal,
   onSubmit,
 }) => {
-  return(
-    <Dialog open={ iamModal.show } labelledby="form-dialog-title" >
-      <DialogTitle id="form-dialog-title">AWS User Credentials</DialogTitle>
+  return (
+    <Dialog open={iamModal.show} labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">{'AWS User Credentials'}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Enter your access key id and secret access key below to enable access to the Kubernetes
-          cluster.
+          {'Enter your access key and secret key below to enable access to the cluster.'}
         </DialogContentText>
         <TextField
           autoFocus
@@ -47,11 +46,13 @@ const AddIAMUserModalComponent = ({
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={hideModal}>Cancel</Button>
-        <Button onClick={onSubmit}>Add</Button>
+        <Button onClick={hideModal}>{'Cancel'}</Button>
+        <Button onClick={onSubmit}>{'Add'}</Button>
       </DialogActions>
-    </Dialog >
+    </Dialog>
   );
-}
+};
+
+AddIAMUserModalComponent.displayName = 'AddIAMUserModalComponent';
 
 export default AddIAMUserModalComponent;

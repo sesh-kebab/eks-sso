@@ -4,6 +4,16 @@ export const ADD_CREDENTIALS = 'credentials:authenticate';
 export const DELETE_CREDENTIALS = 'credentials:logout';
 export const INVALID_CREDENTIALS = 'credentials:invalid';
 
+const add = user => {
+  return {
+    type: ADD_CREDENTIALS,
+    payload: {
+      user,
+      valid: true,
+    },
+  };
+};
+
 const addCredentials = (accessId, secretKey) => (dispatch, getState, api) => {
   dispatch(onAddStart());
   const data = {
@@ -23,16 +33,6 @@ const addCredentials = (accessId, secretKey) => (dispatch, getState, api) => {
     .catch(e => {
       dispatch(onAddError(e.message));
     });
-};
-
-const add = user => {
-  return {
-    type: ADD_CREDENTIALS,
-    payload: {
-      user,
-      valid: true,
-    },
-  };
 };
 
 export { addCredentials };
