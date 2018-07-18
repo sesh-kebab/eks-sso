@@ -9,6 +9,7 @@ import authReducer from './reducers/authReducer';
 import credentialsReducer from './reducers/awsCredentialReducer';
 import iamAddModalReducer from './reducers/iamModalReducer';
 import loginReducer from './reducers/loginReducer';
+import kubernetesReducer from './reducers/kubernetes-reducer';
 
 const configureStore = () => {
   const allReducers = combineReducers({
