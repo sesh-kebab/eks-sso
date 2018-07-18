@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -141,8 +140,8 @@ func main() {
 			c.String(FlagAuth0Connection),
 			c.String(FlagAuth0ClientID),
 			c.String(FlagClusterName),
-			newHTTPClient(),
 		)
+
 		awsClient := aws.NewClient(
 			c.String(FlagClusterName),
 			c.String(FlagAWSRegion),
@@ -217,20 +216,5 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
-	}
-}
-
-func newHTTPClient() *http.Client {
-	return &http.Client{
-		Transport: &http.Transport{
-			Dial: (&net.Dialer{
-				Timeout:   30 * time.Second,
-				KeepAlive: 30 * time.Second,
-			}).Dial,
-			TLSHandshakeTimeout:   10 * time.Second,
-			ResponseHeaderTimeout: 10 * time.Second,
-			ExpectContinueTimeout: 1 * time.Second,
-		},
-		Timeout: time.Second * 15,
 	}
 }
