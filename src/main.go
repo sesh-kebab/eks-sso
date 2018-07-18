@@ -152,8 +152,14 @@ func main() {
 		cs := []interface {
 			GetRoutes() []controllers.Route
 		}{
+<<<<<<< HEAD
 			controllers.NewAuthController(auth0Authenticator, cookieStore),
 			controllers.NewAWSController(awsClient, k8sClient, cookieStore),
+=======
+			controllers.NewAuthController(auth0, sessionStore),
+			controllers.NewAWSController(awsClient, k8sClient, sessionStore),
+			controllers.NewKubernetesController(k8sClient, sessionStore),
+>>>>>>> 2e1bdad... Add frontend and backend code for displaying namespaces in namespace tab
 		}
 
 		// register routes for all the controllers

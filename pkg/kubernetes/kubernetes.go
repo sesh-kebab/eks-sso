@@ -3,6 +3,7 @@ package kubernetes
 import (
 	"log"
 
+	"github.com/quintilesims/eks-sso/pkg/models"
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/api/rbac/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -15,6 +16,7 @@ import (
 // Client exposes Kubernetes functionality
 type Client interface {
 	ProvisionNamespace(username string, userARN string) error
+	GetNamespaces() (namespaces []models.NamespaceResponse, err error)
 }
 
 // NewKubernetesClient returns a new instance of KubernetesManager or an error if an instance couldn't
@@ -103,6 +105,23 @@ func (k ClientAPI) ProvisionNamespace(username, userARN string) error {
 	}
 
 	return nil
+}
+
+// GetNamespaces reads namespace and a rolebinding to give that user
+// cluster-admin permissions within the newly created namespace
+func (k ClientAPI) GetNamespaces() (namespaces []models.NamespaceResponse, err error) {
+	namespacesList, err := k.client.CoreV1().Namespaces().List(metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, namespace := range namespacesList.Items {
+		namespaces = append(namespaces, models.NamespaceResponse{Name: namespace.Name, CreationTime: namespace.CreationTimestamp.Unix()})
+
+	}
+
+	log.Println("[DEBUG] listing:", namespaces)
+	return namespaces, nil
 }
 
 func getConfig(inCluster bool, kubeConfigPath string) (*rest.Config, error) {

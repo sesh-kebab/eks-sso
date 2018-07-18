@@ -5,6 +5,7 @@ import React from 'react';
 import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer';
 import AppBarComponent from './AppBarComponent';
 import KubeConfigContainer from '../kube-config/KubeConfigContainer';
+import NamespacesDetail from '../NamespacesDetails';
 import LandingPage from './LandingPageComponent';
 import SideBarComponent from './SideBarComponent';
 
@@ -43,6 +44,7 @@ const MainComponent = ({ classes, auth, credentials, logout, showIAMAddModal }) 
         {/* Add routes for new sections here and links in SideBarComponent */}
         <Route exact path="/" component={LandingPage} />
         <Route path="/kube-config" component={KubeConfigContainer} />
+        <Route path="/namespaces" component={NamespacesDetail} />
 
         <AddIAMUserModalComponent />
       </main>

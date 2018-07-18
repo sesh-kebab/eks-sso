@@ -16,6 +16,7 @@ const configureStore = () => {
     credentials: credentialsReducer,
     login: loginReducer,
     iamModal: iamAddModalReducer,
+    namespaces: kubernetesReducer,
   });
 
   const allStoreEnhancers = composeWithDevTools(applyMiddleware(thunk.withExtraArgument(api)));
