@@ -17,6 +17,7 @@ import (
 type Client interface {
 	ProvisionNamespace(username string, userARN string) error
 	GetNamespaces() (namespaces []models.NamespaceResponse, err error)
+	ProvisionPrivateNamespace(name string) error
 }
 
 // NewKubernetesClient returns a new instance of KubernetesManager or an error if an instance couldn't
@@ -62,6 +63,7 @@ func (k ClientAPI) ProvisionNamespace(username, userARN string) error {
 			Name: username,
 			Labels: map[string]string{
 				"eks-sso": "true",
+				"user":    "true",
 			},
 		},
 	}
@@ -74,7 +76,7 @@ func (k ClientAPI) ProvisionNamespace(username, userARN string) error {
 		}
 	}
 
-	// create rbac role binding for the user for ther created namespace
+	// create role binding for the user for ther created namespace
 	log.Println("[DEBUG] creating rolebinding:", namespace.Name)
 	rb := &v1beta1.RoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
@@ -122,6 +124,73 @@ func (k ClientAPI) GetNamespaces() (namespaces []models.NamespaceResponse, err e
 
 	log.Println("[DEBUG] listing:", namespaces)
 	return namespaces, nil
+}
+
+// ProvisionPrivateNamespace creates a namespace, service account and role
+// binding to give the service account cluster-admin permissions within the
+// newly created namespace
+func (k ClientAPI) ProvisionPrivateNamespace(name string) error {
+	namespace := &apiv1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: name,
+			Labels: map[string]string{
+				"eks-sso": "true",
+				"private": "true",
+			},
+		},
+	}
+
+	// create namespace
+	log.Println("[DEBUG] creating namespace:", namespace.Name)
+	if _, err := k.client.CoreV1().Namespaces().Create(namespace); err != nil {
+		return err
+	}
+
+	// create service account
+	sa := &apiv1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace.Name,
+			Labels: map[string]string{
+				"eks-sso": "true",
+			},
+		},
+	}
+
+	log.Println("[DEBUG] creating service account:", namespace.Name)
+	if _, err := k.client.CoreV1().ServiceAccounts(namespace.Name).Create(sa); err != nil {
+		return err
+	}
+
+	// create role binding for the namespace and service account
+	log.Println("[DEBUG] creating rolebinding:", namespace.Name)
+	rb := &v1beta1.RoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name + "-sa",
+			Namespace: namespace.Name,
+			Labels: map[string]string{
+				"eks-sso": "true",
+			},
+		},
+		Subjects: []v1beta1.Subject{
+			v1beta1.Subject{
+				Kind:      "ServiceAccount",
+				Name:      sa.Name,
+				Namespace: namespace.Name,
+			},
+		},
+		RoleRef: v1beta1.RoleRef{
+			APIGroup: "rbac.authorization.k8s.io",
+			Kind:     "ClusterRole",
+			Name:     "cluster-admin",
+		},
+	}
+
+	if _, err := k.client.RbacV1beta1().RoleBindings(namespace.Name).Create(rb); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func getConfig(inCluster bool, kubeConfigPath string) (*rest.Config, error) {
