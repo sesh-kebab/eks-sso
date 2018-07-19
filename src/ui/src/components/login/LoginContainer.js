@@ -1,4 +1,4 @@
-import { compose, setDisplayName, withStateHandlers } from 'recompose';
+import { compose, withStateHandlers } from 'recompose';
 import { connect } from 'react-redux';
 
 import { authenticateUser } from '../../actions/authenticateActions';
@@ -14,7 +14,6 @@ const mapActionsToProps = {
 };
 
 const enhance = compose(
-  setDisplayName('Login'),
   connect(
     mapStateToProps,
     mapActionsToProps

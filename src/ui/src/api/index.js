@@ -9,4 +9,14 @@ const postData = (url, data) =>
     credentials: 'same-origin',
   });
 
-export default { postData };
+const getData = (url) =>
+  fetch(url, {
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    cache: 'no-cache',
+    method: 'GET',
+    credentials: 'same-origin',
+  });
+
+export default { postData, getData };

@@ -4,9 +4,9 @@ import React from 'react';
 
 import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer';
 import AppBarComponent from './AppBarComponent';
-import KubeConfigComponent from './../kube-config/KubeConfigComponent';
 import LandingPage from './LandingPageComponent';
 import SideBarComponent from './SideBarComponent';
+import KubeConfigContainer from '../kube-config/KubeConfigContainer';
 
 const styles = theme => ({
   root: {
@@ -46,7 +46,7 @@ const MainComponent = ({
 
         {/* Add routes for new sections here and links in SideBarComponent */}
         <Route exact path="/" component={LandingPage} />
-        <Route path="/kube-config" component={KubeConfigComponent} />
+        <Route path="/kube-config" component={KubeConfigContainer} />
 
         <AddIAMUserModalComponent />
       </main>
