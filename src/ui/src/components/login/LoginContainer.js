@@ -26,12 +26,16 @@ const enhance = compose(
     }),
     {
       onUsernameChange: state => event => {
-        state.username = event.target.value;
-        return state;
+        return {
+          username: event.target.value,
+          password: state.password,
+        };
       },
       onPasswordChange: state => event => {
-        state.password = event.target.value;
-        return state;
+        return {
+          username: state.username,
+          password: event.target.value,
+        };
       },
       onSubmit: (state, props) => event => {
         event.preventDefault();

@@ -25,35 +25,33 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
-class MainComponent extends React.Component {
-  render() {
-    const { classes, auth, credentials, logout, showIAMAddModal } = this.props;
+const MainComponent = ({
+  classes, auth, credentials, logout, showIAMAddModal
+}) => {
+  return (
+    <div className={classes.root}>
+      <AppBarComponent
+        userName={auth.givenName}
+        userPictureUrl={auth.pictureUrl}
+        clusterName={auth.clusterName}
+        iamUserName={credentials.user}
+        logout={logout}
+        howIAMModal={showIAMAddModal}
+      />
+      <SideBarComponent
+        credentials={credentials}
+      />
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
 
-    return (
-      <div className={classes.root}>
-        <AppBarComponent
-          userName={auth.givenName}
-          userPictureUrl={auth.pictureUrl}
-          clusterName={auth.clusterName}
-          iamUserName={credentials.user}
-          logout={logout}
-          howIAMModal={showIAMAddModal}
-        />
-        <SideBarComponent
-          credentials={credentials}
-        />
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
+        {/* Add routes for new sections here and links in SideBarComponent */}
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/kube-config" component={KubeConfigComponent} />
 
-          {/* Add routes for new sections here and links in SideBarComponent */}
-          <Route exact path="/" component={LandingPage} />
-          <Route path="/kube-config" component={KubeConfigComponent} />
-
-          <AddIAMUserModalComponent />
-        </main>
-      </div>
-    );
-  }
+        <AddIAMUserModalComponent />
+      </main>
+    </div>
+  );
 }
 
 MainComponent.displayName = 'MainComponent';
