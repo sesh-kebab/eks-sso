@@ -54,11 +54,11 @@ spec:
         - name: EKS_SSO_CLUSTER_REGION
           value: "us-west-2"
         - name: EKS_SSO_CLUSTER_NAME
-          value: "seshi"
+          value: ""
         - name: EKS_SSO_AUTH0_CONNECTION
-          value: "xfra-test-bind-4"
+          value: ""
         - name: EKS_SSO_AUTH0_CLIENT_ID
-          value: "g1EIAi6ygfpfnmBm27zj85696CwiKLys"
+          value: ""
         - name: EKS_SSO_DEBUG
           value: "true"
         - name: EKS_SSO_IN_CLUSTER
