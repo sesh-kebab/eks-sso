@@ -10,7 +10,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MemoryIcon from '@material-ui/icons/Memory';
 import PortraitIcon from '@material-ui/icons/Portrait';
-import PropTypes from 'prop-types';
 import React from 'react';
 import SubjectIcon from '@material-ui/icons/Subject';
 
@@ -24,66 +23,53 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
-class SideBarComponent extends React.Component {
-  static propTypes = {
-    iamCredentials: PropTypes.array,
-  };
+// class SideBarComponent extends React.Component {
+const SideBarComponent = ({
+  classes,
+  credentials,
+  showIAMAddModal
+}) => {
+  return (
+    <Drawer
+      variant="permanent"
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <div className={classes.toolbar} />
 
-  openModal = () => {
-    this.setState({ modalIsOpen: true });
-  };
-
-  closeModal = () => {
-    this.setState({ modalIsOpen: false });
-  };
-
-  showKubeConfig = () => {
-    // show kube config
-  };
-
-  render() {
-    const { classes, credentials, showIAMAddModal } = this.props;
-
-    return (
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.toolbar} />
-
-        {!credentials.valid ? (
+      {/* todo: so verbose :/ maybe a HOC list here or generate the list from state */}
+      {!credentials.valid ? (
+        <List>
+          <ListItem button onClick={showIAMAddModal}>
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add IAM User" />
+          </ListItem>
+        </List>
+      ) : (
           <List>
-            <ListItem button onClick={showIAMAddModal}>
-              <ListItemIcon>
-                <AddIcon />
-              </ListItemIcon>
-              <ListItemText primary="Add IAM User" />
-            </ListItem>
-          </List>
-        ) : (
-          <List>
-            <ListItem button component={Link} to="/cluster">
+            <ListItem button component={Link} to="/kube-config">
               <ListItemIcon>
                 <SubjectIcon />
               </ListItemIcon>
               <ListItemText primary="Kube Config" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/users">
               <ListItemIcon>
                 <GroupIcon />
               </ListItemIcon>
               <ListItemText primary="Users" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/namespaces">
               <ListItemIcon>
                 <PortraitIcon />
               </ListItemIcon>
               <ListItemText primary="Namespaces" />
             </ListItem>
             <Divider />
-            <ListItem button>
+            <ListItem button component={Link} to="/workers">
               <ListItemIcon>
                 <MemoryIcon />
               </ListItemIcon>
@@ -91,9 +77,8 @@ class SideBarComponent extends React.Component {
             </ListItem>
           </List>
         )}
-      </Drawer>
-    );
-  }
+    </Drawer>
+  );
 }
 
 SideBarComponent.displayName = 'SideBarComponent';

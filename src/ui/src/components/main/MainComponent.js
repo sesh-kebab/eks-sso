@@ -4,11 +4,9 @@ import React from 'react';
 
 import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer';
 import AppBarComponent from './AppBarComponent';
-import ClusterDetail from '../ClusterDetails';
+import KubeConfigComponent from './../kube-config/KubeConfigComponent';
 import LandingPage from './LandingPageComponent';
 import SideBarComponent from './SideBarComponent';
-
-const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
@@ -17,16 +15,6 @@ const styles = theme => ({
     overflow: 'hidden',
     position: 'relative',
     display: 'flex',
-  },
-  flex: {
-    flex: 1,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    width: drawerWidth,
   },
   content: {
     flexGrow: 1,
@@ -38,36 +26,28 @@ const styles = theme => ({
 });
 
 class MainComponent extends React.Component {
-  state = {
-    anchorEl: null,
-    mobileOpen: false,
-    modalOpen: false,
-    selectedUser: undefined,
-    selectedSecret: undefined,
-  };
-
   render() {
-    const { classes } = this.props;
+    const { classes, auth, credentials, logout, showIAMAddModal } = this.props;
 
     return (
       <div className={classes.root}>
         <AppBarComponent
-          userName={this.props.auth.givenName}
-          userPictureUrl={this.props.auth.pictureUrl}
-          clusterName={this.props.auth.clusterName}
-          logout={this.props.logout}
-          iamUserName={this.props.credentials.user}
-          showIAMModal={this.props.showIAMAddModal}
+          userName={auth.givenName}
+          userPictureUrl={auth.pictureUrl}
+          clusterName={auth.clusterName}
+          iamUserName={credentials.user}
+          logout={logout}
+          howIAMModal={showIAMAddModal}
         />
         <SideBarComponent
-          credentials={this.props.credentials}
-          showIAMAddModal={this.props.showIAMAddModal}
+          credentials={credentials}
         />
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
+          {/* Add routes for new sections here and links in SideBarComponent */}
           <Route exact path="/" component={LandingPage} />
-          <Route path="/cluster" component={ClusterDetail} />
+          <Route path="/kube-config" component={KubeConfigComponent} />
 
           <AddIAMUserModalComponent />
         </main>

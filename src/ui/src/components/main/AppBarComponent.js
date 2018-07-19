@@ -8,11 +8,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PersonIcon from '@material-ui/icons/Person';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import spacing from '../../../node_modules/@material-ui/core/styles/spacing';
 const styles = theme => ({
   flex: {
     flex: 1,
@@ -20,31 +20,18 @@ const styles = theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
+  marginRight: {
+    marginRight: theme.spacing.unit * 2,
+  }
 });
 
 class AppBarComponent extends React.Component {
-  static propTypes = {
-    openMenu: PropTypes.func,
-    closeMenu: PropTypes.func,
-    userName: PropTypes.string,
-    clusterName: PropTypes.string,
-    userPictureUrl: PropTypes.string,
-    addCredentials: PropTypes.func,
-    logout: PropTypes.func,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
       anchorEl: props.anchorEl || null,
     };
   }
-
-  toggleMenu = event => {
-    this.setState({
-      anchorEl: this.state.anchorEl || event.currentTarget,
-    });
-  };
 
   openMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -71,10 +58,11 @@ class AppBarComponent extends React.Component {
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="title" color="inherit" className={classes.flex} noWrap>
+            {'Cluster: '}
             {clusterName}
           </Typography>
           {iamUserName && (
-            <Typography variant="subheading" color="inherit" noWrap>
+            <Typography variant="body2" color="inherit" className={classes.marginRight} noWrap>
               {'IAM User: '}
               {iamUserName}
             </Typography>

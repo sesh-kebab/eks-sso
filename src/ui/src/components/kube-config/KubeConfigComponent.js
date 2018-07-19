@@ -36,7 +36,7 @@ const styles = theme => ({
   },
 });
 
-class ClusterDetails extends React.Component {
+class KubeConfigComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -103,10 +103,10 @@ class ClusterDetails extends React.Component {
   }
 }
 
-ClusterDetails.displayName = 'ClusterDetails';
+KubeConfigComponent.displayName = 'KuKubeConfigComponent';
 
-ClusterDetails.propTypes = {
+KubeConfigComponent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ClusterDetails);
+export default withStyles(styles)(KubeConfigComponent);
