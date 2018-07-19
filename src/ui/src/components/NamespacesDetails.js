@@ -10,6 +10,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {getNamespaces} from './../actions/kubernetes-actions';
 import Grow from '@material-ui/core/Grow';
+import {showNamespaceModal} from './../actions/createNamespaceActions'
+import AddIcon from '@material-ui/icons/Add';
+import AddNamespaceModalComponent from '../components/modals/AddNamespaceModalContainer';
 
 const styles = {
   card: {
@@ -25,7 +28,10 @@ const styles = {
   },
   pos: {
     marginBottom: 12,
-  }
+  },
+  button: {
+    position: "relative",
+  },
 };
 
 class NamespacesDetails extends React.Component {
@@ -73,6 +79,10 @@ class NamespacesDetails extends React.Component {
             </Grow>
           );
         })}
+        <Button variant="fab" color="primary" aria-label="Add" className={classes.button} onClick={this.props.showNamespaceModal}>
+          <AddIcon />
+        </Button>
+        <AddNamespaceModalComponent />
       </div>
     );
   }
@@ -117,16 +127,16 @@ NamespacesDetails.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  namespaces: state.namespaces
+  namespaces: state.namespaces,
+  namespaceModal: state.namespaceModal
 });
 
 const mapActionsToProps = ({
   getNamespaces: getNamespaces,
+  showNamespaceModal: showNamespaceModal
 });
 
 export default withRouter(connect(
   mapStateToProps,
   mapActionsToProps,
 )(withStyles(styles)(NamespacesDetails)))
-
-

@@ -10,6 +10,7 @@ import credentialsReducer from './reducers/awsCredentialReducer';
 import iamAddModalReducer from './reducers/iamModalReducer';
 import loginReducer from './reducers/loginReducer';
 import kubernetesReducer from './reducers/kubernetes-reducer';
+import createNamespaceReducer from './reducers/createNamespaceReducer';
 
 const configureStore = () => {
   const allReducers = combineReducers({
@@ -18,6 +19,7 @@ const configureStore = () => {
     login: loginReducer,
     iamModal: iamAddModalReducer,
     namespaces: kubernetesReducer,
+    namespaceModal: createNamespaceReducer,
   });
 
   const allStoreEnhancers = composeWithDevTools(applyMiddleware(thunk.withExtraArgument(api)));

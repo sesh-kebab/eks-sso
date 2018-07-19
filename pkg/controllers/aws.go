@@ -46,7 +46,7 @@ func (a AWSController) GetRoutes() []Route {
 			Path:       "/namespace",
 			Method:     []string{"POST"},
 			Handler:    a.AddCredentials,
-			Restricted: true,
+			Restricted: false,
 		},
 	}
 }
