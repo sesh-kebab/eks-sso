@@ -1,5 +1,5 @@
-import { withStyles } from '@material-ui/core/styles';
 import { compose, withStateHandlers } from 'recompose';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import ExitIcon from '@material-ui/icons/ExitToApp';
@@ -13,7 +13,6 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-
 const styles = theme => ({
   flex: {
     flex: 1,
@@ -23,7 +22,7 @@ const styles = theme => ({
   },
   marginRight: {
     marginRight: theme.spacing.unit * 2,
-  }
+  },
 });
 
 const AppBarComponent = ({
@@ -95,7 +94,7 @@ const AppBarComponent = ({
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 const enhance = compose(
   withStateHandlers(
@@ -109,11 +108,11 @@ const enhance = compose(
           anchorEl: event.target,
           menuOpen: !state.menuOpen,
         };
-      }
+      },
     }
   ),
-  withStyles(styles),
-)
+  withStyles(styles)
+);
 
 AppBarComponent.displayName = 'AppBarComponent';
 

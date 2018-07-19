@@ -9,7 +9,7 @@ const postData = (url, data) =>
     credentials: 'same-origin',
   });
 
-const getData = (url) =>
+const getData = url =>
   fetch(url, {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',

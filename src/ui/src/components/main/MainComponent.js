@@ -4,9 +4,9 @@ import React from 'react';
 
 import AddIAMUserModalComponent from '../modals/AddIAMUserModalContainer';
 import AppBarComponent from './AppBarComponent';
+import KubeConfigContainer from '../kube-config/KubeConfigContainer';
 import LandingPage from './LandingPageComponent';
 import SideBarComponent from './SideBarComponent';
-import KubeConfigContainer from '../kube-config/KubeConfigContainer';
 
 const styles = theme => ({
   root: {
@@ -25,9 +25,7 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
-const MainComponent = ({
-  classes, auth, credentials, logout, showIAMAddModal
-}) => {
+const MainComponent = ({ classes, auth, credentials, logout, showIAMAddModal }) => {
   return (
     <div className={classes.root}>
       <AppBarComponent
@@ -36,11 +34,9 @@ const MainComponent = ({
         clusterName={auth.clusterName}
         iamUserName={credentials.user}
         logout={logout}
-        howIAMModal={showIAMAddModal}
+        showIAMAddModal={showIAMAddModal}
       />
-      <SideBarComponent
-        credentials={credentials}
-      />
+      <SideBarComponent credentials={credentials} showIAMAddModal={showIAMAddModal} />
       <main className={classes.content}>
         <div className={classes.toolbar} />
 
@@ -52,7 +48,7 @@ const MainComponent = ({
       </main>
     </div>
   );
-}
+};
 
 MainComponent.displayName = 'MainComponent';
 

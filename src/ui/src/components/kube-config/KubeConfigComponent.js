@@ -26,9 +26,7 @@ const styles = theme => ({
   },
 });
 
-const KubeConfigComponent = ({
-  classes, kubeconfig
-}) => {
+const KubeConfigComponent = ({ classes, kubeconfig }) => {
   return (
     <div>
       <div className={classes.toolbar}>
@@ -58,7 +56,7 @@ const KubeConfigComponent = ({
       />
     </div>
   );
-}
+};
 
 KubeConfigComponent.displayName = 'KuKubeConfigComponent';
 

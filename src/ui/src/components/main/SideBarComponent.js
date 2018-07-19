@@ -24,11 +24,7 @@ const styles = theme => ({
 });
 
 // class SideBarComponent extends React.Component {
-const SideBarComponent = ({
-  classes,
-  credentials,
-  showIAMAddModal
-}) => {
+const SideBarComponent = ({ classes, credentials, showIAMAddModal }) => {
   return (
     <Drawer
       variant="permanent"
@@ -49,37 +45,37 @@ const SideBarComponent = ({
           </ListItem>
         </List>
       ) : (
-          <List>
-            <ListItem button component={Link} to="/kube-config">
-              <ListItemIcon>
-                <SubjectIcon />
-              </ListItemIcon>
-              <ListItemText primary="Kube Config" />
-            </ListItem>
-            <ListItem button component={Link} to="/users">
-              <ListItemIcon>
-                <GroupIcon />
-              </ListItemIcon>
-              <ListItemText primary="Users" />
-            </ListItem>
-            <ListItem button component={Link} to="/namespaces">
-              <ListItemIcon>
-                <PortraitIcon />
-              </ListItemIcon>
-              <ListItemText primary="Namespaces" />
-            </ListItem>
-            <Divider />
-            <ListItem button component={Link} to="/workers">
-              <ListItemIcon>
-                <MemoryIcon />
-              </ListItemIcon>
-              <ListItemText primary="Worker Nodes" />
-            </ListItem>
-          </List>
-        )}
+        <List>
+          <ListItem button component={Link} to="/kube-config">
+            <ListItemIcon>
+              <SubjectIcon />
+            </ListItemIcon>
+            <ListItemText primary="Kube Config" />
+          </ListItem>
+          <ListItem button component={Link} to="/users">
+            <ListItemIcon>
+              <GroupIcon />
+            </ListItemIcon>
+            <ListItemText primary="Users" />
+          </ListItem>
+          <ListItem button component={Link} to="/namespaces">
+            <ListItemIcon>
+              <PortraitIcon />
+            </ListItemIcon>
+            <ListItemText primary="Namespaces" />
+          </ListItem>
+          <Divider />
+          <ListItem button component={Link} to="/workers">
+            <ListItemIcon>
+              <MemoryIcon />
+            </ListItemIcon>
+            <ListItemText primary="Worker Nodes" />
+          </ListItem>
+        </List>
+      )}
     </Drawer>
   );
-}
+};
 
 SideBarComponent.displayName = 'SideBarComponent';
 
