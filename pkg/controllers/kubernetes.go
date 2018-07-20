@@ -69,5 +69,8 @@ func (a *KubernetesController) CreatePrivateNamespace(w http.ResponseWriter, r *
 
 	if err := a.kube.ProvisionPrivateNamespace(namespaceName); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
 }

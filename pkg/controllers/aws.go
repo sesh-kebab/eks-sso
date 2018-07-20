@@ -53,10 +53,28 @@ func (a *AWSController) GetCluster(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	awsResponse, err := a.aws.GetClusterInfo(iamCreds.AccessID, iamCreds.SecretKey)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
+	var awsResponse *models.ClusterInfoResponse
+	var err error
+
+	namespaceName := r.URL.Query().Get("name")
+	if namespaceName == "" {
+		awsResponse, err = a.aws.GetClusterInfo(iamCreds.AccessID, iamCreds.SecretKey)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+	} else {
+		sa, token, err := a.kube.GetTokenForNamespace(namespaceName)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		awsResponse, err = a.aws.GetKubeConfig(iamCreds.AccessID, iamCreds.SecretKey, sa, token)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
 	}
 
 	resp, err := json.Marshal(awsResponse)

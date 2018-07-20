@@ -22,6 +22,7 @@ import (
 type Client interface {
 	AddIAMCredentials(accessID, secretKey string) (*models.AddCredentialsResponse, error)
 	GetClusterInfo(accessID, secretKey string) (*models.ClusterInfoResponse, error)
+	GetKubeConfig(accesID, secretKey, serviceAccountName, token string) (*models.ClusterInfoResponse, error)
 }
 
 // NewClient returns an instance of aws.client
@@ -133,6 +134,45 @@ func (c ClientAPI) GetClusterInfo(accessID, secretKey string) (*models.ClusterIn
 	return resp, nil
 }
 
+func (c ClientAPI) GetKubeConfig(accessID, secretKey, namespace, token string) (*models.ClusterInfoResponse, error) {
+	svc := c.eks(accessID, secretKey)
+
+	input := &eks.DescribeClusterInput{}
+	input.SetName(c.clusterName)
+	output, err := svc.DescribeCluster(input)
+	if err != nil {
+		return nil, err
+	}
+
+	tmpl, err := template.New("kubeConfig").Parse(kubeCofigTemplateForSA)
+	if err != nil {
+		return nil, err
+	}
+
+	vals := map[string]string{
+		"Endpoint":           aws.StringValue(output.Cluster.Endpoint),
+		"CertData":           aws.StringValue(output.Cluster.CertificateAuthority.Data),
+		"ClusterName":        aws.StringValue(output.Cluster.Name),
+		"Namespace":          namespace,
+		"ServiceAccountName": namespace,
+		"Token":              token,
+	}
+	buf := new(bytes.Buffer)
+	if err := tmpl.Execute(buf, vals); err != nil {
+		return nil, err
+	}
+
+	if output.Cluster == nil {
+		return nil, fmt.Errorf("describe cluster response returned empty cluster")
+	}
+
+	resp := &models.ClusterInfoResponse{
+		Cluster:    *output.Cluster,
+		KubeConfig: buf.String(),
+	}
+	return resp, nil
+}
+
 // todo: add default user namespace once we bootstrap k8s user
 const kubeConfigTemplate = `
 apiVersion: v1
@@ -164,4 +204,30 @@ users:
         - "token"
         - "-i"
         - "{{.Name}}"
+`
+
+const kubeCofigTemplateForSA = `
+apiVersion: v1
+kind: Config
+preferences: {}
+
+current-context: eks
+
+contexts:
+- context:
+    cluster: eks-{{.ClusterName}}
+    namespace: {{.Namespace}}
+    user: service-account-{{.ServiceAccountName}}
+  name: eks-{{.Namespace}}
+
+clusters:
+- cluster:
+    server: {{.Endpoint}}
+    certificate-authority-data: {{.CertData}}
+  name: eks
+
+users:
+- name: service-account-{{.ServiceAccountName}}
+  user:
+    token: {{.Token}}
 `

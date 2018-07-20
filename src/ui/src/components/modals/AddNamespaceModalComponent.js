@@ -16,10 +16,10 @@ const AddNamespaceModalComponent = ({
 }) => {
   return (
     <Dialog open={namespaceModal.show} labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">{'AWS User Credentials'}</DialogTitle>
+      <DialogTitle id="form-dialog-title">{'New Namespace'}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {'Enter a name for a private namespace.'}
+          {'Enter a name for the namespace.'}
         </DialogContentText>
         <TextField
           autoFocus
@@ -30,7 +30,7 @@ const AddNamespaceModalComponent = ({
           fullWidth
         />
         <Typography variant="body1" color="error">
-          {namespaceModal.name}
+          {namespaceModal.errorMessage}
         </Typography>
       </DialogContent>
       <DialogActions>

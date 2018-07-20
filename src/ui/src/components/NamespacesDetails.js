@@ -72,7 +72,7 @@ class NamespacesDetails extends React.Component {
                 </CardContent>
                 <CardActions>
                   <Button size="small" color="primary">
-                    List Pods
+                    KubeConfig
                 </Button>
                 </CardActions>
               </Card>

@@ -18,6 +18,7 @@ type Client interface {
 	ProvisionNamespace(username string, userARN string) error
 	GetNamespaces() (namespaces []models.NamespaceResponse, err error)
 	ProvisionPrivateNamespace(name string) error
+	GetTokenForNamespace(namespaceName string) (string, string, error)
 }
 
 // NewKubernetesClient returns a new instance of KubernetesManager or an error if an instance couldn't
@@ -191,6 +192,14 @@ func (k ClientAPI) ProvisionPrivateNamespace(name string) error {
 	}
 
 	return nil
+}
+
+func (k ClientAPI) GetTokenForNamespace(namespaceName string) (string, string, error) {
+	// grab the namespace
+	// grab the service account in that namespace (with matching namespace name or label)
+	// grab th secret for the service account
+	// base64 decode the token and return it
+	return namespaceName, "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3", nil
 }
 
 func getConfig(inCluster bool, kubeConfigPath string) (*rest.Config, error) {
