@@ -14,7 +14,7 @@ const showIAMAddModal = () => ({
 });
 
 const hideIAMAddModal = () => ({
-  type: IAM_MODAL_SHOW,
+  type: IAM_MODAL_HIDE,
   payload: {
     show: false,
     message: '',

@@ -161,7 +161,10 @@ func main() {
 		restrictedRouteMap := map[string]bool{}
 		for _, controller := range cs {
 			for _, route := range controller.GetRoutes() {
-				router.HandleFunc(route.Path, route.Handler).Methods(route.Method...)
+				router.HandleFunc(route.Path, route.Handler).
+					Methods(route.Method...).
+					Queries(route.QueryParams...)
+
 				restrictedRouteMap[route.Path] = route.Restricted
 			}
 		}

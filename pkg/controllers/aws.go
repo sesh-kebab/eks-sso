@@ -42,18 +42,11 @@ func (a AWSController) GetRoutes() []Route {
 			Handler:    a.AddCredentials,
 			Restricted: true,
 		},
-		{
-			Path:       "/namespace",
-			Method:     []string{"POST"},
-			Handler:    a.AddCredentials,
-			Restricted: false,
-		},
 	}
 }
 
 // GetCluster returns configuration needed to connect to kubernetes cluster
 func (a *AWSController) GetCluster(w http.ResponseWriter, r *http.Request) {
-	// set secure encrypted cookie with iam creds
 	iamCreds, ok := iamCredsFromContext(r.Context())
 	if !ok {
 		http.Error(w, "credentials not present", http.StatusBadRequest)
@@ -119,18 +112,4 @@ func (a *AWSController) AddCredentials(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(resp)
-}
-
-// CreatePrivateNamespace ...
-// todo: probably should read name from request body instead of query string
-func (a *AWSController) CreatePrivateNamespace(w http.ResponseWriter, r *http.Request) {
-	namespaceName := r.URL.Query().Get("name")
-	if namespaceName == "" {
-		http.Error(w, "invalid request: missing name query string parameter", http.StatusBadRequest)
-		return
-	}
-
-	if err := a.kube.ProvisionPrivateNamespace(namespaceName); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
 }

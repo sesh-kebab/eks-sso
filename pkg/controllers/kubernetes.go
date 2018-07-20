@@ -31,6 +31,13 @@ func (k KubernetesController) GetRoutes() []Route {
 			Handler:    k.GetNamespaces,
 			Restricted: true,
 		},
+		{
+			Path:        "/namespace",
+			Method:      []string{"POST"},
+			Handler:     k.CreatePrivateNamespace,
+			Restricted:  true,
+			QueryParams: []string{"name", "{name}"},
+		},
 	}
 }
 
@@ -49,4 +56,18 @@ func (k *KubernetesController) GetNamespaces(w http.ResponseWriter, r *http.Requ
 	}
 
 	w.Write(resp)
+}
+
+// CreatePrivateNamespace ...
+// todo: probably should read name from request body instead of query string
+func (a *KubernetesController) CreatePrivateNamespace(w http.ResponseWriter, r *http.Request) {
+	namespaceName := r.URL.Query().Get("name")
+	if namespaceName == "" {
+		http.Error(w, "invalid request: missing name query string parameter", http.StatusBadRequest)
+		return
+	}
+
+	if err := a.kube.ProvisionPrivateNamespace(namespaceName); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

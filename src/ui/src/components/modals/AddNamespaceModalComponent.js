@@ -19,13 +19,13 @@ const AddNamespaceModalComponent = ({
       <DialogTitle id="form-dialog-title">{'AWS User Credentials'}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {'Enter your access key and secret key below to enable access to the cluster.'}
+          {'Enter a name for a private namespace.'}
         </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
           id="access-key"
-          label="Access Key Id"
+          label="Name"
           onChange={onAccessNameChange}
           fullWidth
         />

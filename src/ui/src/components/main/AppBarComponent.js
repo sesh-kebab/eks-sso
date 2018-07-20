@@ -31,7 +31,7 @@ const AppBarComponent = ({
   userPictureUrl,
   clusterName,
   iamUserName,
-  showIAMModal,
+  showIAMAddModal,
   logout,
   menuOpen,
   anchorEl,
@@ -73,7 +73,7 @@ const AppBarComponent = ({
           onClose={toggleMenu}
         >
           {iamUserName && (
-            <MenuItem className={classes.menuItem} onClick={showIAMModal}>
+            <MenuItem className={classes.menuItem} onClick={showIAMAddModal}>
               <ListItemIcon className={classes.icon}>
                 <PersonIcon />
               </ListItemIcon>
