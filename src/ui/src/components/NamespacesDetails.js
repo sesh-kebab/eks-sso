@@ -71,9 +71,9 @@ class NamespacesDetails extends React.Component {
                 </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    KubeConfig
-                </Button>
+                  <Button size="small" color="primary" onClick={() => { kubeconfigToClipboard(namespace.name) }} >
+                    {'Copy KubeConfig'}
+                  </Button>
                 </CardActions>
               </Card>
             </Grow>
@@ -120,6 +120,16 @@ function timeDifference(current, previous) {
   else {
     return '~' + Math.round(elapsed / msPerYear) + ' years ago';
   }
+}
+
+
+function kubeconfigToClipboard(name) { 
+  var textArea = document.createElement("textarea");
+  textArea.value = name
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("Copy");
+  textArea.remove();
 }
 
 NamespacesDetails.propTypes = {

@@ -35,7 +35,7 @@ const KubeConfigComponent = ({ classes, kubeconfig }) => {
         </Typography>
 
         <div className={classes.buttonContainer}>
-          <Button variant="contained" className={classes.button}>
+          <Button variant="contained" className={classes.button} onClick={kubeconfigToClipboard}>
             {'Copy'}
           </Button>
           <Button variant="contained" className={classes.button}>
@@ -45,7 +45,7 @@ const KubeConfigComponent = ({ classes, kubeconfig }) => {
       </div>
 
       <TextField
-        id="multiline-flexible"
+        id="kubeConfigTextArea"
         multiline
         rowsMax="30"
         value={kubeconfig}
@@ -57,6 +57,16 @@ const KubeConfigComponent = ({ classes, kubeconfig }) => {
     </div>
   );
 };
+
+function kubeconfigToClipboard() {
+  var copyText = document.getElementById("kubeConfigTextArea");
+  var textArea = document.createElement("textarea");
+  textArea.value = copyText.value
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("Copy");
+  textArea.remove();
+}
 
 KubeConfigComponent.displayName = 'KuKubeConfigComponent';
 

@@ -1,5 +1,4 @@
 import { getNamespaces } from './kubernetes-actions';
-// import { onAddError } from './iamAddUserModalActions';
 
 export const NAMESPACE_MODAL_SHOW = 'namespace-modal:show';
 export const NAMESPACE_MODAL_HIDE = 'namespace-modal:hide';
@@ -32,11 +31,12 @@ const onAddError = (message) => ({
 
 const createNamespace = (name) => (dispatch, getState, api) => {
   api
-    .postData('/namespace?name=' + name)
+    .postData('/namespace?name=' + name.toLowerCase())
     .then(response => {
       if (!response.ok) {
         return response.text()
       }
+      return ''
     })
     .then(text => {
       //check for error
