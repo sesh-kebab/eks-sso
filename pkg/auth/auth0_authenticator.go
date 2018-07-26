@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/quintilesims/eks-sso/pkg/models"
 	"github.com/zpatrick/rclient"
@@ -98,11 +99,18 @@ func (a *Auth0Authenticator) getAccessToken(username, password string) (string, 
 }
 
 func (a *Auth0Authenticator) getProfile(token string) (*auth0Profile, error) {
+	// Having the 'Content-Type' header will make this API call fail
+	option := func(req *http.Request) error {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+		req.Header.Del("Content-Type")
+		return nil
+	}
+
 	var resp auth0Profile
-	header := rclient.Header("Authorization", fmt.Sprintf("Bearer %s", token))
-	if err := a.client.Get("/userinfo", &resp, header); err != nil {
+	if err := a.client.Get("/userinfo", &resp, option); err != nil {
 		return nil, err
 	}
 
 	return &resp, nil
+
 }
