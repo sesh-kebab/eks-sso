@@ -19,7 +19,6 @@ mocks:
 	mockgen -package mock github.com/quintilesims/eks-sso/pkg/auth Kubernetes > pkg/mock/mock_kubernetes.go
 
 build:
-	cd src/ui; npm run build;
 	docker build -t $(CURRENT_DOCKER_IMAGE) .
 
 release: build
