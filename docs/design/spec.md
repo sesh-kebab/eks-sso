@@ -1,4 +1,4 @@
-# Authentication Spec
+# Spec
 
 ## Abstract
 This application will allow users to manage certain aspects of their Kubernetes cluster using a web service. 
