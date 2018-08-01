@@ -88,14 +88,14 @@ High-level overview of the API methods provided by the backend.
 | DELETE | /users/:userID/role/:roleID |             | Revokes a role from a user                |
 
 
-**Namespace**
+**Namespaces**
 
 | Method | Path                                   | Params | Description                                            |
 |--------|----------------------------------------|--------|--------------------------------------------------------|
-| GET    | /namespace                             |        | Returns a list of namespaces                           |
-| POST   | /namespace                             |        | Create a new namespace                                 |
-| GET    | /namespace/:namespaceID                |        | Returns detailed information about a namespace |
-| DELETE | /namespace/:namespaceID                |        | Delete a namespace                         |
-| GET    | /namespace/:namespaceID/kubeconfig.yml |        | Returns a raw kubeconfig.yml for a namespace   |
+| GET    | /namespaces                             |        | Returns a list of namespaces                           |
+| POST   | /namespaces                             |        | Create a new namespace                                 |
+| GET    | /namespaces/:namespaceID                |        | Returns detailed information about a namespace |
+| DELETE | /namespaces/:namespaceID                |        | Delete a namespace                         |
+| GET    | /namespaces/:namespaceID/kubeconfig.yml |        | Returns a raw kubeconfig.yml for a namespace   |
 
 
