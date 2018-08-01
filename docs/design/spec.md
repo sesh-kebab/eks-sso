@@ -15,7 +15,7 @@ I believe users will need to configure the OAuth2 request to have the `openid` s
 The `openid` scope should contain a username or email we can use as the `userID` in our application (see: https://auth0.com/docs/protocols/oauth2).
 * The service's frontend will use the Auth0 React Lock (https://www.npmjs.com/package/auth0-react-lock) to perform the handshake with Auth0. 
 * Every route in the frontend will be protected by the Auth0 React Lock.
-* Users will need to configure the service's Kubernetes yaml files to connect the web service with their Auth0 Application. They will also need to specify which OAuth2 providers to display in the Auth0 React Lock. 
+* Users will need to configure the service's Kubernetes yaml files to connect the web service with their Auth0 Application. They will also need to specify which connections to display in the Auth0 React Lock. 
 This may look something like:
 ```
 auth0:
@@ -34,7 +34,7 @@ Once the `userID` is extracted, the backend will do 1 of 2 things: If the `userI
 
 ## Permissions Model
 The permissions model will use a simple RBAC model, which has the following concepts:
-* **User**: A user is created after a succesful Auth0 handshake.
+* **User**: A user is created after their first succesful Auth0 handshake.
 A user can be assigned 0-many roles.
 * **Role**: A role contains 0-many permissions. 
 By default, the web service will create an `Administrator` and `Guest` role. 
