@@ -54,9 +54,11 @@ If there are no permissions which allow said action, the action is denied.
 |-------------------|-----------|----------------------|---------------|
 | View Dashboard    | Allow     | -                    | Allow         |
 | View Cluster      | -         | -                    | Allow         |
+| List Namespaces   | Allow     | -                    | Allow         |
 | View Namespace    | -         | Self                 | Allow         |
 | Create Namespace  | -         | -                    | Allow         |
 | Delete Namespace  | -         | -                    | Allow         |
+| List Users        | -         | -                    | Allow         |
 | View User         | Self      | -                    | Allow         |
 | Grant User Role   | -         | -                    | Allow         |
 | Revoke User Role  | Self      | -                    | Allow         |
