@@ -57,7 +57,6 @@ func TestAuth0AuthenticatorGetProfile(t *testing.T) {
 		assert.Equal(t, r.Method, "GET")
 		assert.Equal(t, r.URL.Path, "/userinfo")
 		assert.Equal(t, "Bearer token", r.Header.Get("Authorization"))
-		assert.Equal(t, "", r.Header.Get("Content-Type"))
 
 		MarshalAndWrite(t, w, resp, 200)
 	}

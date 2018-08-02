@@ -5,11 +5,12 @@
 package mock
 
 import (
-	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
+
 	aws "github.com/aws/aws-sdk-go/aws"
 	request "github.com/aws/aws-sdk-go/aws/request"
 	sts "github.com/aws/aws-sdk-go/service/sts"
-	reflect "reflect"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockSTSAPI is a mock of STSAPI interface

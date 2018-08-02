@@ -5,9 +5,10 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/quintilesims/eks-sso/pkg/models"
-	reflect "reflect"
 )
 
 // MockAuthenticator is a mock of Authenticator interface
